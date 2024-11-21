@@ -1,0 +1,77 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model User {
+    networkId Int      @id
+    username  String
+    pfp       String
+    role      Role
+    joinedAt  DateTime @default(now())
+
+    ownedRooms  RoomOwnership[]
+    createdJobs Room[]
+}
+
+enum Role {
+    LOCKED
+    UNVERIFIED
+    USER
+    MODERATOR
+    DEVELOPER
+}
+
+model RoomOwnership {
+    room     Room @relation(fields: [roomId, roomHost], references: [roomId, host])
+    roomId   Int
+    roomHost Host
+    user     User @relation(fields: [userId], references: [networkId])
+    userId   Int
+
+    @@id([roomId, roomHost, userId])
+}
+
+model Room {
+    roomId Int
+    host   Host
+    owners RoomOwnership[]
+
+    antifreezeMessage String
+    runAntifreeze     Boolean         @default(true)
+    locked            Boolean         @default(false)
+    errored           Boolean         @default(false)
+    runs              AntifreezeRun[]
+
+    jobCreator   User     @relation(fields: [jobCreatorId], references: [networkId])
+    jobCreatorId Int
+    jobCreatedAt DateTime @default(now())
+
+    @@id([roomId, host])
+}
+
+enum Host {
+    SE
+    SO
+    MSE
+}
+
+model AntifreezeRun {
+    id        String           @id @default(cuid())
+    room      Room             @relation(fields: [roomId, roomHost], references: [roomId, host])
+    roomId    Int
+    roomHost  Host
+    result    AntifreezeResult
+    error     String?
+    checkedAt DateTime         @default(now())
+}
+
+enum AntifreezeResult {
+    OK
+    ANTIFREEZED
+    ERROR
+}
