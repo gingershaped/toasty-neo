@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useSelectedLayoutSegment } from "next/navigation";
 import { User } from "@prisma/client";
+import { UserLink } from "./UserLink";
 
 export type HeaderProps = {
     user: User | null,
@@ -26,9 +27,9 @@ export default function Header({ user, children: routeNames }: HeaderProps) {
             </div>
             {user != null ? (
                 <div className="nav-item dropdown">
-                    <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <UserLink user={user} className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         {user.username}
-                    </a>
+                    </UserLink>
                     <ul className="dropdown-menu dropdown-menu-end">
                         <li><Link className="dropdown-item" href={`/users/${user.networkId}`}>Profile</Link></li>
                         <li><Link className="dropdown-item text-danger" href="/auth/logout">Log out</Link></li>
