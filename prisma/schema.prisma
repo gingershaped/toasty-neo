@@ -39,10 +39,11 @@ model RoomOwnership {
 model Room {
     roomId Int
     host   Host
+    name   String
     owners RoomOwnership[]
 
     antifreezeMessage String
-    runAntifreeze     Boolean         @default(true)
+    active            Boolean         @default(true)
     locked            Boolean         @default(false)
     errored           Boolean         @default(false)
     runs              AntifreezeRun[]
@@ -52,6 +53,7 @@ model Room {
     jobCreatedAt DateTime @default(now())
 
     @@id([roomId, host])
+    @@index([host, errored])
 }
 
 enum Host {

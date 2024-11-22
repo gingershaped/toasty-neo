@@ -1,5 +1,6 @@
 import prisma from "@/lib/db";
 import { readSession } from "@/lib/session";
+import { User } from "@prisma/client";
 import { z } from "zod";
 
 export const MINIMUM_REPUTATION = 200;
@@ -15,4 +16,7 @@ export async function readUserSession() {
         return null;
     }
     return await prisma.user.findUnique({ where: { networkId: session.id } });
+}
+export function isModerator(user: User) {
+    return ["MODERATOR", "DEVELOPER"].includes(user.role);
 }

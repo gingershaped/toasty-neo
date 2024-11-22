@@ -17,7 +17,7 @@ const BADGES: Record<Role, [string, string] | null> = {
 
 export function UserLink({ user, href, ...props }: UserLinkProps) {
     const [label, color] = BADGES[user.role] ?? [null, null];
-    return <Link href={href ?? `/users/${user.networkId}`} {...props}>
+    return <Link href={href ?? `/users/${user.networkId}`} {...{...props, className: props.className + " text-decoration-none"}}>
         <span>{user.username}</span>
         {label != null && <span className={`badge text-bg-${color} ms-2 me-1`}>{label}</span>}
     </Link>;
