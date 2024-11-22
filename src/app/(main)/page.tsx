@@ -1,5 +1,5 @@
 import prisma from "@/lib/db";
-import { readUserSession } from "../auth/session";
+import { readUserSession } from "../../lib/auth/session";
 import Link from "next/link";
 
 export default async function Index() {

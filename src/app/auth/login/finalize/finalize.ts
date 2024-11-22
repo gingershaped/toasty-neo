@@ -3,11 +3,11 @@
 import { environ } from "@/lib/environ";
 import { networkUserSchema, seRequest, siteUserSchema } from "@/lib/se";
 import { NextResponse } from "next/server";
-import { MINIMUM_REPUTATION, SESSION_COOKIE, SESSION_COOKIE_MAX_AGE, SessionPayload } from "../../session";
+import { MINIMUM_REPUTATION, SESSION_COOKIE, SESSION_COOKIE_MAX_AGE, SessionPayload } from "../../../../lib/auth/session";
 import sites from "@/lib/sites";
 import prisma from "@/lib/db";
 import { Role } from "@prisma/client";
-import { createSession } from "@/lib/session";
+import { createSessionCookie } from "@/lib/auth/cookie";
 import { redirect } from "next/navigation";
 
 export async function finalizeLogin(code: string | null) {
@@ -47,6 +47,6 @@ export async function finalizeLogin(code: string | null) {
             networkId: primaryAccount.account_id,
         },
     });
-    await createSession<SessionPayload>(SESSION_COOKIE, { id: user.networkId }, SESSION_COOKIE_MAX_AGE);
+    await createSessionCookie<SessionPayload>(SESSION_COOKIE, { id: user.networkId }, SESSION_COOKIE_MAX_AGE);
     redirect("/");
 }

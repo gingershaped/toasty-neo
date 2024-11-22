@@ -2,7 +2,7 @@ import "server-only";
 import { JWTPayload, jwtVerify, SignJWT } from "jose";
 import type { TypeOf, ZodTypeAny } from "zod";
 import { cookies } from "next/headers";
-import { environ } from "./environ";
+import { environ } from "../environ";
 
 const sessionKey = new TextEncoder().encode(environ.SESSION_KEY);
 
@@ -24,13 +24,13 @@ export async function decrypt<T extends ZodTypeAny>(session: string, schema: T):
     }
 }
 
-export async function createSession<T extends JWTPayload>(cookie: string, payload: T, maxAgeSeconds: number) {
+export async function createSessionCookie<T extends JWTPayload>(cookie: string, payload: T, maxAgeSeconds: number) {
     const expiresAt = new Date(Date.now() + maxAgeSeconds * 1000);
     const session = await encrypt(payload, expiresAt);
     (await cookies()).set(cookie, session, { httpOnly: true, secure: true, expires: expiresAt });
 }
 
-export async function readSession<T extends ZodTypeAny>(cookie: string, schema: T): Promise<TypeOf<T> | null> {
+export async function readSessionCookie<T extends ZodTypeAny>(cookie: string, schema: T): Promise<TypeOf<T> | null> {
     const cookieStore = await cookies();
     const cookieValue = cookieStore.get(cookie)?.value;
     if (cookieValue == undefined) {

@@ -1,6 +1,6 @@
 "use server";
 
-import { isModerator, readUserSession } from "@/app/auth/session";
+import { isModerator, readUserSession } from "@/lib/auth/session";
 import { roomName, userOwnedRooms } from "@/lib/chat";
 import prisma from "@/lib/db";
 import { hostSchema } from "@/lib/schema";

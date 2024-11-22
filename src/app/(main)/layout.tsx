@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import Header from "../_components/Header";
-import { readUserSession } from "../auth/session";
+import { readUserSession } from "../../lib/auth/session";
 
 export default async function MainLayout({ children }: { children: ReactNode }) {
     const user = await readUserSession();
