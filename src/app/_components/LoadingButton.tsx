@@ -7,11 +7,12 @@ type LoadingButtonProps = {
     className?: string,
     onClick?: MouseEventHandler<HTMLButtonElement>,
     type?: "submit" | "reset" | "button",
+    formAction?: ((formData: FormData) => void | Promise<void>),
     children: ReactNode,
 };
 
-export function LoadingButton({ loading, variant, disabled, className, onClick, type, children }: LoadingButtonProps) {
-    return <button className={`btn btn-${variant} position-relative ${className}`} disabled={(disabled ?? false) || loading} onClick={onClick} type={type}>
+export function LoadingButton({ loading, variant, disabled, className, onClick, type, children, formAction }: LoadingButtonProps) {
+    return <button className={`btn btn-${variant} position-relative ${className}`} disabled={(disabled ?? false) || loading} onClick={onClick} type={type} formAction={formAction}>
         {loading && (
             <div className="position-absolute top-50 start-50 translate-middle ">
                 <div className="spinner-border spinner-border-sm" role="status">

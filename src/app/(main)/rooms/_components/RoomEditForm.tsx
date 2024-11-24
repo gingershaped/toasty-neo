@@ -3,13 +3,14 @@ export type RoomEditFormProps = {
     message?: string,
     run?: boolean,
     locked?: boolean,
+    readOnly?: boolean,
 };
 
-export function RoomEditForm({ isModerator, message, run, locked }: RoomEditFormProps) {
+export function RoomEditForm({ isModerator, message, run, locked, readOnly }: RoomEditFormProps) {
     return <>
         <div className="mb-3">
             <label htmlFor="room-message" className="form-label">Antifreeze message to send</label>
-            <input type="text" className="form-control" id="room-message" name="message" maxLength={128} defaultValue={message ?? "---"} />
+            <input type="text" className="form-control" id="room-message" name="message" maxLength={128} defaultValue={message ?? "---"} disabled={readOnly} />
             <div className="mt-3">
                 Available substitutions:
                 <ul className="my-1">
@@ -19,11 +20,11 @@ export function RoomEditForm({ isModerator, message, run, locked }: RoomEditForm
             </div>
         </div>
         <div className="form-check form-switch">
-            <input className="form-check-input" type="checkbox" role="switch" id="run-antifreeze" name="active" defaultChecked={run ?? true} />
+            <input className="form-check-input" type="checkbox" role="switch" id="run-antifreeze" name="active" defaultChecked={run ?? true} disabled={readOnly} />
             <label className="form-check-label" htmlFor="run-antifreeze">Run antifreeze</label>
         </div>
         {isModerator && <div className="form-check form-switch">
-            <input className="form-check-input" type="checkbox" role="switch" id="locked" name="locked" defaultChecked={locked ?? false} />
+            <input className="form-check-input" type="checkbox" role="switch" id="locked" name="locked" defaultChecked={locked ?? false} disabled={readOnly} />
             <label className="form-check-label" htmlFor="run-antifreeze">Locked</label>
         </div>}
     </>;

@@ -18,7 +18,7 @@ export default function Header({ user, children: routeNames }: HeaderProps) {
             <div className="navbar-nav me-auto">
                 {Object.entries(routeNames).map(([routeSegment, label]) => (
                     <Link
-                        href={routeSegment}
+                        href={`/${routeSegment}`}
                         key={routeSegment}
                         className={routeSegment == segment ? "nav-link active" : "nav-link"}
                         aria-current={routeSegment == segment ? "page" : undefined}

@@ -12,7 +12,7 @@ export function RoomEntry({ room }: RoomEntryProps) {
     return <div className="list-group-item d-flex align-items-center">
         <div className="me-auto d-block">
             <div>
-                <Link href={`/rooms/${room.roomId}`}>{room.name}</Link>
+                <Link href={`/rooms/${room.host.toLowerCase()}/${room.roomId}`}>{room.name}</Link>
                 {room.errored && <span className="badge text-bg-danger">errored</span>}
                 {room.locked && <span className="badge text-bg-secondary">locked</span>}
             </div>

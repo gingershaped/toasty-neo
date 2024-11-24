@@ -1,20 +1,20 @@
 "use client";
 
 import { useActionState, useMemo, useState } from "react";
-import { RoomEditForm } from "../_components/RoomEditForm";
-import { addRoom, fetchOwnedRooms } from "./actions";
+import { RoomEditForm } from "../../_components/RoomEditForm";
+import { modifyRoom, fetchOwnedRooms } from "../../../actions";
 import { Host } from "@prisma/client";
 import useSWR from "swr";
 import { LoadingButton } from "@/app/_components/LoadingButton";
 
-export function AddRoomForm({ isModerator }: { isModerator: boolean }) {
+export function RoomAddForm({ isModerator }: { isModerator: boolean }) {
     const [host, setHost] = useState<Host>(Host.SE);
     const [searchQuery, setSearchQuery] = useState("");
     const { data: ownedRooms, error: ownedRoomsError, isLoading: loadingOwnedRooms } = useSWR(host, fetchOwnedRooms);
 
     const filteredRooms = useMemo(() => ownedRooms?.filter(({ name }) => searchQuery.length == 0 || name.toLowerCase().includes(searchQuery)), [ownedRooms, searchQuery]);
     const [{ errors: formErrors }, action, submitting] = useActionState<{ errors: string[] }, FormData>(
-        (_, form) => addRoom(form), { errors: [] },
+        (_, form) => modifyRoom(form), { errors: [] },
     );
     
     return <form className="row" action={action}>

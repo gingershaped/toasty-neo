@@ -5,6 +5,6 @@ import { revalidatePath } from "next/cache";
 
 export async function GET() {
     (await cookies()).delete(SESSION_COOKIE);
-    revalidatePath("/", "layout");
+    revalidatePath("/");
     redirect("/");
 }

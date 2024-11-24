@@ -1,3 +1,5 @@
+"use server";
+
 import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 import { cookies } from "next/headers";
 import { z } from "zod";
@@ -15,11 +17,10 @@ export async function flash(message: Flash) {
     const cookieStore = await cookies();
     const flashes = parseFlashes(cookieStore);
     flashes.push(message);
-    cookieStore.set(FLASH_COOKIE, JSON.stringify(flashes));
+    cookieStore.set(FLASH_COOKIE, JSON.stringify(flashes), { maxAge: 1 });
 }
 export async function flashes() {
     const cookieStore = await cookies();
     const flashes = parseFlashes(cookieStore);
-    cookieStore.delete(FLASH_COOKIE);
     return flashes;
 }

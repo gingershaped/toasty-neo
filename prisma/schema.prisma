@@ -14,7 +14,6 @@ model User {
     role      Role
     joinedAt  DateTime @default(now())
 
-    ownedRooms  RoomOwnership[]
     createdJobs Room[]
 }
 
@@ -26,21 +25,10 @@ enum Role {
     DEVELOPER
 }
 
-model RoomOwnership {
-    room     Room @relation(fields: [roomId, roomHost], references: [roomId, host])
-    roomId   Int
-    roomHost Host
-    user     User @relation(fields: [userId], references: [networkId])
-    userId   Int
-
-    @@id([roomId, roomHost, userId])
-}
-
 model Room {
     roomId Int
     host   Host
     name   String
-    owners RoomOwnership[]
 
     antifreezeMessage String
     active            Boolean         @default(true)

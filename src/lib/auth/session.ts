@@ -1,4 +1,3 @@
-import "server-only";
 import prisma from "@/lib/db";
 import { readSessionCookie } from "@/lib/auth/cookie";
 import { User } from "@prisma/client";
@@ -17,7 +16,4 @@ export async function readUserSession() {
         return null;
     }
     return await prisma.user.findUnique({ where: { networkId: session.id } });
-}
-export function isModerator(user: User) {
-    return ["MODERATOR", "DEVELOPER"].includes(user.role);
 }
