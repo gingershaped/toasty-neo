@@ -12,13 +12,13 @@ model User {
     username  String
     pfp       String
     role      Role
+    locked    Boolean  @default(false)
     joinedAt  DateTime @default(now())
 
     createdJobs Room[]
 }
 
 enum Role {
-    LOCKED
     UNVERIFIED
     USER
     MODERATOR
