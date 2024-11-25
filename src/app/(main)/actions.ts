@@ -63,13 +63,13 @@ export async function modifyRoom(form: FormData): Promise<{ errors: string[] }> 
             name,
             jobCreator: { connect: { networkId: user.networkId } },
             locked: data.locked,
-            active: data.active,
+            state: data.active ? "ACTIVE": "PAUSED",
         },
         update: {
             name,
             antifreezeMessage: data.message,
             locked: data.locked,
-            active: data.active,
+            state: data.active ? "ACTIVE" : "PAUSED",
         },
     });
     redirect(`/rooms/${data.host.toLowerCase()}/${roomId}`);

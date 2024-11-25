@@ -31,9 +31,8 @@ model Room {
     name   String
 
     antifreezeMessage String
-    active            Boolean         @default(true)
+    state             RoomState       @default(ACTIVE)
     locked            Boolean         @default(false)
-    errored           Boolean         @default(false)
     runs              AntifreezeRun[]
 
     jobCreator   User     @relation(fields: [jobCreatorId], references: [networkId])
@@ -41,7 +40,13 @@ model Room {
     jobCreatedAt DateTime @default(now())
 
     @@id([roomId, host])
-    @@index([host, errored])
+    @@index([host, state, jobCreatorId])
+}
+
+enum RoomState {
+    ACTIVE
+    PAUSED
+    ERRORED
 }
 
 enum Host {

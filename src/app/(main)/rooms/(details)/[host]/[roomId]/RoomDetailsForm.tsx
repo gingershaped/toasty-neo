@@ -22,7 +22,7 @@ export default function RoomDetailsForm({ room, canEdit, isModerator }: { room: 
             readOnly={!canEdit}
             locked={room.locked}
             message={room.antifreezeMessage}
-            run={room.active}
+            run={room.state == "ACTIVE"}
         />
         {canEdit && <>
             <hr />
