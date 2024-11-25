@@ -1,7 +1,10 @@
 import { UserLink } from "@/app/_components/UserLink";
+import { readUserSession } from "@/lib/auth/session";
+import { userCanModerate } from "@/lib/auth/utils";
 import prisma from "@/lib/db";
 
 export default async function UserList() {
+    const currentUser = await readUserSession();
     const users = await prisma.user.findMany({ orderBy: { joinedAt: "desc" } });
 
     return <div className="row justify-content-center">
@@ -12,7 +15,7 @@ export default async function UserList() {
             <div className="list-group">
                 {users.map((user, index) => (
                     <div key={index} className="list-group-item">
-                        <UserLink user={user} />
+                        <UserLink user={user} showLocked={currentUser != null && userCanModerate(currentUser)} />
                         <div className="text-secondary-emphasis">#{user.networkId}</div>
                     </div>
                 ))}

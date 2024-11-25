@@ -27,9 +27,7 @@ export default function Header({ user, children: routeNames }: HeaderProps) {
             </div>
             {user != null ? (
                 <div className="nav-item dropdown">
-                    <UserLink user={user} className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        {user.username}
-                    </UserLink>
+                    <UserLink user={user} className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" showLocked />
                     <ul className="dropdown-menu dropdown-menu-end">
                         <li><Link className="dropdown-item" href={`/users/${user.networkId}`}>Profile</Link></li>
                         <li><Link className="dropdown-item text-danger" href="/auth/logout">Log out</Link></li>

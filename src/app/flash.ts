@@ -7,7 +7,7 @@ import { z } from "zod";
 const flashSchema = z.array(
     z.object({ severity: z.enum(["success", "danger", "warning", "info"]), message: z.string() }),
 );
-type Flash = z.infer<typeof flashSchema.element>;
+export type Flash = z.infer<typeof flashSchema.element>;
 
 const FLASH_COOKIE = "flash";
 function parseFlashes(cookieStore: ReadonlyRequestCookies) {

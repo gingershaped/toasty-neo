@@ -1,7 +1,7 @@
 "use server";
 
 import { readUserSession } from "@/lib/auth/session";
-import { canModerate } from "@/lib/auth/utils";
+import { userCanModerate } from "@/lib/auth/utils";
 import prisma from "@/lib/db";
 import { roleSchema } from "@/lib/schema";
 import { parseFormData } from "@/lib/util";
@@ -16,7 +16,7 @@ const modOptionsSchema = z.object({
 
 export async function updateModOptions(form: FormData) {
     const currentUser = await readUserSession();
-    if (currentUser == null || !canModerate(currentUser.role)) {
+    if (currentUser == null || !userCanModerate(currentUser)) {
         return;
     }
     const { data, success } = parseFormData(form, modOptionsSchema);

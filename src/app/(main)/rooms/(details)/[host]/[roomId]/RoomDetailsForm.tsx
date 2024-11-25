@@ -1,7 +1,6 @@
 "use client";
 
-import { canModerate } from "@/lib/auth/utils";
-import { Role, Room } from "@prisma/client";
+import { Room } from "@prisma/client";
 import { RoomEditForm } from "../../../_components/RoomEditForm";
 import { deleteRoom, modifyRoom } from "@/app/(main)/actions";
 import { useActionState } from "react";
@@ -9,8 +8,7 @@ import { LoadingButton } from "@/app/_components/LoadingButton";
 import Link from "next/link";
 import { HOSTS } from "@/lib/chat";
 
-export default function RoomDetailsForm({ role, room, canEdit }: { role: Role | null, room: Room, canEdit: boolean }) {
-    const isModerator = role != null && canModerate(role);
+export default function RoomDetailsForm({ room, canEdit, isModerator }: { room: Room, canEdit: boolean, isModerator: boolean }) {
     const [{ errors: formErrors }, editAction, submitting] = useActionState<{ errors: string[] }, FormData>(
         (_, form) => modifyRoom(form), { errors: [] },
     );

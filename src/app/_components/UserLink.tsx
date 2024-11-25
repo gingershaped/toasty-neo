@@ -19,11 +19,13 @@ export function RoleBadge({ role }: { role: Role }) {
 type UserLinkProps = {
     user: User,
     href?: string,
-} & Omit<AnchorHTMLAttributes<HTMLAnchorElement>, keyof LinkProps>;
+    showLocked?: boolean,
+} & Omit<AnchorHTMLAttributes<HTMLAnchorElement>, keyof LinkProps | "children">;
 
-export function UserLink({ user, href, ...props }: UserLinkProps) {
+export function UserLink({ user, href, showLocked, ...props }: UserLinkProps) {
     return <Link href={href ?? `/users/${user.networkId}`} {...{...props, className: (props.className ?? "") + " text-decoration-none me-1"}}>
         <span className="me-2">{user.username}</span>
+        {(showLocked && user.locked) && <span className="badge text-bg-danger me-2">Locked</span>}
         <RoleBadge role={user.role} />
     </Link>;
 }

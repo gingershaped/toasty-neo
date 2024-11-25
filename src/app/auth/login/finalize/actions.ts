@@ -24,7 +24,7 @@ export async function finalizeLogin(code: string | null, state: string | null) {
             pfp: primaryAccount.profile_image,
             role,
         },
-        update: {},
+        update: { role },
         where: {
             networkId: primaryAccount.account_id,
         },

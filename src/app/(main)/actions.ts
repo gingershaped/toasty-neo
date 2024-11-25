@@ -1,7 +1,7 @@
 "use server";
 
 import { readUserSession } from "@/lib/auth/session";
-import { canModerate } from "@/lib/auth/utils";
+import { userCanEdit, userCanModerate } from "@/lib/auth/utils";
 import { roomName, userOwnedRooms } from "@/lib/chat";
 import prisma from "@/lib/db";
 import { hostSchema } from "@/lib/schema";
@@ -38,7 +38,10 @@ export async function modifyRoom(form: FormData): Promise<{ errors: string[] }> 
         ) };
     }
     const ownedRooms = (await userOwnedRooms(data.host, user.networkId)).map(({ id }) => parseInt(id));
-    if ((data.locked || data.roomId == "custom" || !ownedRooms.includes(data.roomId)) && !canModerate(user.role)) {
+    if ((data.locked || data.roomId == "custom" || !ownedRooms.includes(data.roomId)) && !userCanModerate(user)) {
+        return { errors: ["Insufficent permissions"] };
+    }
+    if (!userCanEdit(user)) {
         return { errors: ["Insufficent permissions"] };
     }
     const roomId = data.roomId == "custom" ? data.customRoomId! : data.roomId;
@@ -77,7 +80,10 @@ export async function deleteRoom(form: FormData) {
         return false;
     }
     const ownedRooms = (await userOwnedRooms(data.host, user.networkId)).map(({ id }) => parseInt(id));
-    if (!ownedRooms.includes(data.roomId) && !canModerate(user.role)) {
+    if (!ownedRooms.includes(data.roomId) && !userCanModerate(user)) {
+        return false;
+    }
+    if (!userCanEdit(user)) {
         return false;
     }
     await prisma.room.delete({

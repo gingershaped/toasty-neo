@@ -6,11 +6,12 @@ import dayjs from "dayjs";
 import { readUserSession } from "@/lib/auth/session";
 import RoomDetailsForm from "./RoomDetailsForm";
 import { userOwnedRooms } from "@/lib/chat";
+import { userCanEdit, userCanModerate } from "@/lib/auth/utils";
 
 export default async function RoomDetails({ params }: { params: RoomParams }) {
     const user = await readUserSession();
     const room = await getRoom(params, { jobCreator: true, runs: true });
-    const canEdit = user != null && (await userOwnedRooms(room.host, user.networkId)).some(({ id }) => parseInt(id) == room.roomId);
+    const editable = user != null && userCanEdit(user) && ((await userOwnedRooms(room.host, user.networkId)).some(({ id }) => parseInt(id) == room.roomId) || userCanModerate(user));
     const lastAntifreeze = room.runs.findLast(({ result }) => result == "ANTIFREEZED")?.checkedAt;
     const lastChecked = room.runs.at(-1)?.checkedAt;
 
@@ -29,6 +30,6 @@ export default async function RoomDetails({ params }: { params: RoomParams }) {
                 <span className="float-end">{lastAntifreeze != null ? dayjs(lastChecked).format(TIME_FORMAT) : "never"}</span>
             </div>
         </div>
-        <RoomDetailsForm role={user?.role ?? null} room={room} canEdit={canEdit} />
+        <RoomDetailsForm room={room} canEdit={editable} />
     </div>;
 }

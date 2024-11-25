@@ -1,11 +1,10 @@
 "use client";
 
 import { LoadingButton } from "@/app/_components/LoadingButton";
-import { NetworkUser } from "@/lib/se";
 import { updateDetails } from "./actions";
 import { useActionState } from "react";
 
-export function UpdateDetailsForm({ associated }: { associated: NetworkUser[] }) {
+export function UpdateDetailsForm({ associated }: { associated: { site_name: string, site_url: string }[] }) {
     const [, action, submitting] = useActionState<unknown, FormData>((_, form) => updateDetails(form), null);
 
     return <form action={action}>

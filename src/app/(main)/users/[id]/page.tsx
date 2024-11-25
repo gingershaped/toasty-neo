@@ -2,7 +2,7 @@ import Link from "next/link";
 import { getUser, UserParams } from "./user";
 import { readUserSession } from "@/lib/auth/session";
 import dayjs from "dayjs";
-import { canModerate } from "@/lib/auth/utils";
+import { userCanModerate } from "@/lib/auth/utils";
 import { ModOptions } from "./ModOptions";
 
 export default async function UserDetails({ params }: { params: UserParams }) {
@@ -23,6 +23,6 @@ export default async function UserDetails({ params }: { params: UserParams }) {
         <div className="mb-3">
             Account created: {dayjs(targetUser.joinedAt).toISOString()}
         </div>
-        {(currentUser != null && canModerate(currentUser.role)) && <ModOptions targetUser={targetUser} canChangeRole={currentUser.role == "DEVELOPER"} />}
+        {(currentUser != null && userCanModerate(currentUser)) && <ModOptions targetUser={targetUser} canChangeRole={currentUser.role == "DEVELOPER"} />}
     </div>;
 }

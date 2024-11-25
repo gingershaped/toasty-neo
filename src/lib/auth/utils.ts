@@ -1,5 +1,8 @@
-import { Role } from "@prisma/client";
+import { User } from "@prisma/client";
 
-export function canModerate(role: Role) {
-    return ["MODERATOR", "DEVELOPER"].includes(role);
+export function userCanModerate(user: User) {
+    return userCanEdit(user) && ["MODERATOR", "DEVELOPER"].includes(user.role);
+}
+export function userCanEdit(user: User) {
+    return !user.locked && user.role != "UNVERIFIED";
 }
