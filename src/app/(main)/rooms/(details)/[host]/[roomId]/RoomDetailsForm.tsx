@@ -40,7 +40,7 @@ export default function RoomDetailsForm({ room, canEdit, isModerator }: { room: 
                     variant="primary"
                     loading={submitting}
                     disabled={deleting}
-                >Edit room</LoadingButton>
+                >Save changes</LoadingButton>
                 {formErrors.map((error, index) => <div key={index} className="text-danger">{error}</div>)}
             </div>
         </>}

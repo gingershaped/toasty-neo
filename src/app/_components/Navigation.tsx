@@ -11,7 +11,7 @@ export type NavigationProps = {
 
 export function Navigation({ style, base, children: routeNames }: NavigationProps) {
     const segment = useSelectedLayoutSegment() ?? "";
-    return <nav className={`nav ${style ? `nav-${style}` : ""}`}>
+    return <nav className={`nav ${style ? `nav-${style}` : ""} flex-nowrap`}>
         {Object.entries(routeNames).map(([routeSegment, label]) => (
             <Link
                 href={routeSegment.startsWith("/") ? routeSegment : `${base}/${routeSegment}`}
