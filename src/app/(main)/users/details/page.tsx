@@ -5,7 +5,7 @@ import { UpdateDetailsForm } from "./UpdateDetailsForm";
 
 export default async function UpdateUserDetails() {
     const { associated } = await readSessionCookie(UPDATE_DETAILS_COOKIE, updateDetailsPayload) ?? redirect("/auth/login?state=details");
-    return <div className="row justify-content-center">
+    return <div className="row justify-content-center mx-2 mx-lg-0">
         <div className="col-lg-4 border rounded p-4">
             <h4>Update account details</h4>
             <UpdateDetailsForm associated={associated} />
