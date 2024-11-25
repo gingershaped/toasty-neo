@@ -25,7 +25,7 @@ export function RoomEditForm({ isModerator, message, run, locked, readOnly }: Ro
         </div>
         {isModerator && <div className="form-check form-switch">
             <input className="form-check-input" type="checkbox" role="switch" id="locked" name="locked" defaultChecked={locked ?? false} disabled={readOnly} />
-            <label className="form-check-label" htmlFor="run-antifreeze">Locked</label>
+            <label className="form-check-label" htmlFor="locked">Locked</label>
         </div>}
     </>;
 }
