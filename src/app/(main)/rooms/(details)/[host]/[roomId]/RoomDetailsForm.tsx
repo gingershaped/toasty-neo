@@ -2,7 +2,7 @@
 
 import { Room } from "@prisma/client";
 import { RoomEditForm } from "../../../_components/RoomEditForm";
-import { deleteRoom, modifyRoom } from "@/app/(main)/actions";
+import { deleteRoom, modifyRoom } from "@/app/(main)/rooms/actions";
 import { useActionState } from "react";
 import { LoadingButton } from "@/app/_components/LoadingButton";
 import Link from "next/link";

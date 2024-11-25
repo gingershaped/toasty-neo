@@ -3,7 +3,7 @@
 import { Host } from "@prisma/client";
 import { useMemo, useState } from "react";
 import useSWR from "swr";
-import { fetchOwnedRooms } from "../../actions";
+import { fetchOwnedRooms } from "../actions";
 
 export type OwnedRoomsListProps = {
     isModerator: boolean,

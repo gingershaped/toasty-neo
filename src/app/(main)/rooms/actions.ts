@@ -9,7 +9,7 @@ import { parseFormData } from "@/lib/util";
 import { Host } from "@prisma/client";
 import { redirect } from "next/navigation";
 import { z } from "zod";
-import { flash } from "../flash";
+import { flash } from "../../flash";
 
 const modifyRoomSchema = z.object({
     host: hostSchema,
@@ -17,7 +17,7 @@ const modifyRoomSchema = z.object({
     active: z.coerce.boolean(),
     locked: z.coerce.boolean(),
     roomId: z.union([z.coerce.number(), z.literal("custom")]),
-    customRoomId: z.number().optional(),
+    customRoomId: z.coerce.number().optional(),
 }).refine(({ roomId, customRoomId }) => roomId == "custom" ? customRoomId != undefined : true);
 
 const deleteRoomSchema = z.object({

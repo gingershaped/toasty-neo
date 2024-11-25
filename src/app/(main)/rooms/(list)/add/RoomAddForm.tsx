@@ -2,7 +2,7 @@
 
 import { useActionState, useMemo, useState } from "react";
 import { RoomEditForm } from "../../_components/RoomEditForm";
-import { modifyRoom, fetchOwnedRooms } from "../../../actions";
+import { modifyRoom, fetchOwnedRooms } from "../../actions";
 import { Host } from "@prisma/client";
 import useSWR from "swr";
 import { LoadingButton } from "@/app/_components/LoadingButton";
@@ -39,7 +39,7 @@ export function RoomAddForm({ isModerator }: { isModerator: boolean }) {
                     <ul className="list-group list-group-flush rounded">
                         {isModerator && <li className="list-group-item hstack">
                             <input className="form-check-input my-0 me-2 align-self-center" type="radio" name="roomId" value="custom" required />
-                            <input className="form-control" type="number" name="roomCustomId" placeholder="Enter a room ID" />
+                            <input className="form-control" type="number" name="customRoomId" placeholder="Enter a room ID" />
                         </li>}
                         {filteredRooms.map(({ id, name }) => (
                             <li key={id} className="list-group-item hstack">
