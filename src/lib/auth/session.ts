@@ -1,8 +1,6 @@
 import prisma from "@/lib/db";
 import { readSessionCookie } from "@/lib/auth/cookie";
-import { User } from "@prisma/client";
 import { z } from "zod";
-import { networkUserSchema } from "../se";
 
 export const MINIMUM_REPUTATION = 200;
 export const sessionPayload = z.object({
@@ -20,7 +18,8 @@ export async function readUserSession() {
 }
 
 export const updateDetailsPayload = z.object({
-    associated: z.array(networkUserSchema),
+    // eslint-disable-next-line camelcase
+    associated: z.array(z.object({ site_url: z.string(), site_name: z.string() })),
     token: z.string(),
 });
 export type UpdateDetailsPayload = z.infer<typeof updateDetailsPayload>;
