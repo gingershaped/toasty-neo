@@ -2,18 +2,12 @@
 
 import { environ } from "@/lib/environ";
 import { networkUserSchema, seRequest, siteUserSchema } from "@/lib/se";
-import { NextResponse } from "next/server";
-import { MINIMUM_REPUTATION, SESSION_COOKIE, SESSION_COOKIE_MAX_AGE, SessionPayload } from "../../../../lib/auth/session";
+import { MINIMUM_REPUTATION } from "../../lib/auth/session";
 import sites from "@/lib/sites";
-import prisma from "@/lib/db";
-import { Role } from "@prisma/client";
-import { createSessionCookie } from "@/lib/auth/cookie";
-import { redirect } from "next/navigation";
 
-export async function finalizeLogin(code: string | null) {
-    if (code == null) {
-        redirect("/");
-    }
+type TokenReturn = { token: string, error: undefined, success: true } | { token: undefined, error: object, success: false };
+
+export async function fetchToken(code: string): Promise<TokenReturn> {
     const tokenPayload = new FormData();
     tokenPayload.set("client_id", environ.SE_CLIENT_ID);
     tokenPayload.set("client_secret", environ.SE_CLIENT_SECRET);
@@ -24,29 +18,18 @@ export async function finalizeLogin(code: string | null) {
         { body: tokenPayload, method: "POST" },
     ).then((r) => r.json());
     if ("error" in tokenResponse) {
-        return NextResponse.json(tokenResponse, { status: 500 });
+        return { token: undefined, error: tokenResponse.error, success: false };
     }
-    const { access_token: token } = tokenResponse;
+    return { token: tokenResponse.access_token, error: undefined, success: true };
+}
 
+export async function fetchAccountDetails(token: string) {
     const associated = await seRequest("/me/associated?types=main_site&filter=!--43sh-c)9wP", networkUserSchema, token);
     const hasSufficientReputation = associated.some((user) => user.reputation >= MINIMUM_REPUTATION);
     const isModerator = associated.some((user) => user.user_type == "moderator");
-    const role = hasSufficientReputation ? (isModerator ? Role.MODERATOR : Role.USER) : Role.UNVERIFIED;
     const primarySite = (await sites).get(associated.sort((a, b) => a.reputation - b.reputation).reverse()[0].site_url)!.api_site_parameter;
     const primaryAccount = (await seRequest(`/me?site=${primarySite}`, siteUserSchema, token))[0];
 
-    const user = await prisma.user.upsert({
-        create: {
-            networkId: primaryAccount.account_id,
-            username: primaryAccount.display_name,
-            pfp: primaryAccount.profile_image,
-            role,
-        },
-        update: {},
-        where: {
-            networkId: primaryAccount.account_id,
-        },
-    });
-    await createSessionCookie<SessionPayload>(SESSION_COOKIE, { id: user.networkId }, SESSION_COOKIE_MAX_AGE);
-    redirect("/");
+    return { associated, primaryAccount, hasSufficientReputation, isModerator };
 }
+
