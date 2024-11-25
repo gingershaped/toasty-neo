@@ -30,6 +30,6 @@ export default async function RoomDetails({ params }: { params: RoomParams }) {
                 <span className="float-end">{lastAntifreeze != null ? dayjs(lastChecked).format(TIME_FORMAT) : "never"}</span>
             </div>
         </div>
-        <RoomDetailsForm room={room} canEdit={editable} />
+        <RoomDetailsForm room={room} canEdit={editable} isModerator={user != null && userCanModerate(user)} />
     </div>;
 }
