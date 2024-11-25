@@ -27,7 +27,7 @@ export async function updateModOptions(form: FormData) {
         return;
     }
     const targetUser = await prisma.user.findUnique({ where: { networkId: data.networkId } });
-    if (targetUser == null || targetUser.role == "DEVELOPER") {
+    if (targetUser == null || (userCanModerate(targetUser) && currentUser.role != "DEVELOPER")) {
         return;
     }
     await prisma.user.update({
