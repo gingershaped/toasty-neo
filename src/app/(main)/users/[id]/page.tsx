@@ -23,6 +23,6 @@ export default async function UserDetails({ params }: { params: UserParams }) {
         <div className="mb-3">
             Account created: {dayjs(targetUser.joinedAt).toISOString()}
         </div>
-        {(currentUser != null && userCanModerate(currentUser)) && <ModOptions targetUser={targetUser} canChangeRole={currentUser.role == "DEVELOPER"} />}
+        {(currentUser != null && userCanModerate(currentUser) && targetUser.role != "DEVELOPER") && <ModOptions targetUser={targetUser} canChangeRole={currentUser.role == "DEVELOPER"} />}
     </div>;
 }
