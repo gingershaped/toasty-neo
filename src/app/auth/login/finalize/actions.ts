@@ -5,9 +5,10 @@ import prisma from "@/lib/db";
 import { Role } from "@prisma/client";
 import { redirect } from "next/navigation";
 import { fetchToken, fetchAccountDetails } from "../../actions";
+import { revalidatePath } from "next/cache";
 
 export async function finalizeLogin(code: string | null, state: string | null) {
-    if (code == null || state == null) {
+    if (code == null) {
         redirect("/");
     }
     const { token, error: tokenError, success: tokenSuccess } = await fetchToken(code);
@@ -28,6 +29,7 @@ export async function finalizeLogin(code: string | null, state: string | null) {
             networkId: primaryAccount.account_id,
         },
     });
+    revalidatePath("/");
     await createSessionCookie<SessionPayload>(SESSION_COOKIE, { id: user.networkId }, SESSION_COOKIE_MAX_AGE);
 
     if (state == "details") {
