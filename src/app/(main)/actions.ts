@@ -27,7 +27,7 @@ const deleteRoomSchema = z.object({
 
 export async function fetchOwnedRooms(host: Host) {
     const user = await readUserSession() ?? redirect("/auth/login");
-    const alreadyAddedRooms = new Set((await prisma.room.findMany({ where: { jobCreatorId: user.networkId } })).map(({ roomId }) => roomId));
+    const alreadyAddedRooms = new Set((await prisma.room.findMany({ where: { host, jobCreatorId: user.networkId } })).map(({ roomId }) => roomId));
     return (await userOwnedRooms(host, user.networkId)).filter(({ id }) => !alreadyAddedRooms.has(parseInt(id)));
 }
 
