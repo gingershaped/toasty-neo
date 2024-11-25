@@ -48,6 +48,9 @@ export async function modifyRoom(form: FormData): Promise<{ errors: string[] }> 
     }
     const roomId = data.roomId == "custom" ? data.customRoomId! : data.roomId;
     const name = await roomName(data.host, roomId);
+    if (name == null) {
+        return { errors: ["Room does not exist"] };
+    }
     await prisma.room.upsert({
         where: {
             // eslint-disable-next-line camelcase

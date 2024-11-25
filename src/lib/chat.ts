@@ -21,7 +21,11 @@ export async function userOwnedRooms(host: Host, networkId: number) {
 }
 
 export async function roomName(host: Host, roomId: number) {
-    return parse(await fetch(new URL(`/rooms/info/${roomId}`, HOSTS[host])).then((r) => r.text()))
+    const response = await fetch(new URL(`/rooms/info/${roomId}`, HOSTS[host]));
+    if (response.status != 200) {
+        return null;
+    }
+    return parse(await response.text())
         .querySelector(".subheader")!
         .querySelector("h1")!
         .textContent;
