@@ -6,6 +6,8 @@ import { RoomEditForm } from "../../../_components/RoomEditForm";
 import { deleteRoom, modifyRoom } from "@/app/(main)/actions";
 import { useActionState } from "react";
 import { LoadingButton } from "@/app/_components/LoadingButton";
+import Link from "next/link";
+import { HOSTS } from "@/lib/chat";
 
 export default function RoomDetailsForm({ role, room, canEdit }: { role: Role | null, room: Room, canEdit: boolean }) {
     const isModerator = role != null && canModerate(role);
@@ -26,7 +28,8 @@ export default function RoomDetailsForm({ role, room, canEdit }: { role: Role | 
         />
         {canEdit && <>
             <hr />
-            <div className="d-flex justify-content-end gap-2">
+            <div className="d-flex gap-2">
+                <Link className="me-auto" href={new URL(`/rooms/info/${room.roomId}`, HOSTS[room.host])} target="_blank">view in chat</Link>
                 <LoadingButton
                     type="submit"
                     variant="danger"
