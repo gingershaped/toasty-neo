@@ -13,8 +13,8 @@ export function RoomEntry({ room }: RoomEntryProps) {
         <div className="me-auto d-block">
             <div>
                 <Link href={`/rooms/${room.host.toLowerCase()}/${room.roomId}`}>{room.name}</Link>
-                {room.errored && <span className="badge text-bg-danger">errored</span>}
-                {room.locked && <span className="badge text-bg-secondary">locked</span>}
+                {room.state == "ERRORED" && <span className="badge text-bg-danger ms-2">errored</span>}
+                {room.locked && <span className="badge text-bg-secondary ms-2">locked</span>}
             </div>
             <div className="text-muted">
                 {room.host}#{room.roomId}
