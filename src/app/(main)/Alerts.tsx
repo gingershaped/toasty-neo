@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { Flash } from "../flash";
+import { Flash } from "../../lib/flash";
 import Link from "next/link";
 
 export function Alerts({ flashList }: { flashList: Flash[] }) {

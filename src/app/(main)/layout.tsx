@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import Header from "../_components/Header";
 import { readUserSession } from "../../lib/auth/session";
-import { flashes } from "../flash";
+import { flashes } from "../../lib/flash";
 import { Alerts } from "./Alerts";
 
 export default async function MainLayout({ children }: { children: ReactNode }) {

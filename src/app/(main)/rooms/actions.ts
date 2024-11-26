@@ -9,7 +9,7 @@ import { parseFormData } from "@/lib/util";
 import { Host } from "@prisma/client";
 import { redirect } from "next/navigation";
 import { z } from "zod";
-import { flash } from "../../flash";
+import { flash } from "../../../lib/flash";
 
 const modifyRoomSchema = z.object({
     host: hostSchema,
