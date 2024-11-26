@@ -1,7 +1,7 @@
 "use server";
 import { createSessionCookie } from "@/lib/auth/cookie";
 import { SessionPayload, SESSION_COOKIE, SESSION_COOKIE_MAX_AGE, UpdateDetailsPayload, UPDATE_DETAILS_COOKIE, UPDATE_DETAILS_MAX_AGE } from "@/lib/auth/session";
-import prisma from "@/lib/db";
+import { prisma } from "@/lib/globals";
 import { Role } from "@prisma/client";
 import { redirect } from "next/navigation";
 import { fetchToken, fetchAccountDetails } from "../../actions";

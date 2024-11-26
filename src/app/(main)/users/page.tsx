@@ -1,7 +1,7 @@
 import { UserLink } from "@/app/_components/UserLink";
 import { readUserSession } from "@/lib/auth/session";
 import { userCanModerate } from "@/lib/auth/utils";
-import prisma from "@/lib/db";
+import { prisma } from "@/lib/globals";
 
 export default async function UserList() {
     const currentUser = await readUserSession();

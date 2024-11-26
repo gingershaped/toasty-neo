@@ -3,7 +3,7 @@
 import { environ } from "@/lib/environ";
 import { networkUserSchema, seRequest, siteUserSchema } from "@/lib/se";
 import { MINIMUM_REPUTATION } from "../../lib/auth/session";
-import sites from "@/lib/sites";
+import sites from "@/lib/globals";
 
 type TokenReturn = { token: string, error: undefined, success: true } | { token: undefined, error: object, success: false };
 

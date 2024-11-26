@@ -1,4 +1,4 @@
-import prisma from "@/lib/db";
+import { prisma } from "@/lib/globals";
 import { readUserSession } from "../../lib/auth/session";
 import Link from "next/link";
 

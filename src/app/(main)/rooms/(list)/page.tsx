@@ -1,4 +1,4 @@
-import prisma from "@/lib/db";
+import { prisma } from "@/lib/globals";
 import { RoomList } from "../_components/RoomList";
 
 export default async function AllRooms() {

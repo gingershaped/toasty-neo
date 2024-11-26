@@ -1,4 +1,4 @@
-import prisma from "@/lib/db";
+import { prisma } from "@/lib/globals";
 import { Prisma } from "@prisma/client";
 import { notFound } from "next/navigation";
 import { cache } from "react";

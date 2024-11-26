@@ -1,4 +1,4 @@
-import prisma from "@/lib/db";
+import { prisma } from "@/lib/globals";
 import { readSessionCookie } from "@/lib/auth/cookie";
 import { z } from "zod";
 

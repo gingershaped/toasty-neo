@@ -1,4 +1,4 @@
-import prisma from "@/lib/db";
+import { prisma } from "@/lib/globals";
 import { getUser, UserParams } from "../user";
 import { RoomList } from "@/app/(main)/rooms/_components/RoomList";
 

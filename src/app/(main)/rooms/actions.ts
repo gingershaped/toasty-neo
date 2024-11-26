@@ -3,7 +3,7 @@
 import { readUserSession } from "@/lib/auth/session";
 import { userCanEdit, userCanModerate } from "@/lib/auth/utils";
 import { roomName, userOwnedRooms } from "@/lib/chat";
-import prisma from "@/lib/db";
+import { prisma } from "@/lib/globals";
 import { hostSchema } from "@/lib/schema";
 import { parseFormData } from "@/lib/util";
 import { Host } from "@prisma/client";

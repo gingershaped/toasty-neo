@@ -2,7 +2,7 @@
 
 import { readUserSession } from "@/lib/auth/session";
 import { userCanModerate } from "@/lib/auth/utils";
-import prisma from "@/lib/db";
+import { prisma } from "@/lib/globals";
 import { roleSchema } from "@/lib/schema";
 import { parseFormData } from "@/lib/util";
 import { redirect } from "next/navigation";

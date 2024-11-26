@@ -1,4 +1,4 @@
-import prisma from "@/lib/db";
+import { prisma } from "@/lib/globals";
 import { hostSchema } from "@/lib/schema";
 import { notFound } from "next/navigation";
 import { RoomList } from "../../_components/RoomList";
