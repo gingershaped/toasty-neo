@@ -27,7 +27,7 @@ export async function decrypt<T extends ZodTypeAny>(session: string, schema: T):
 export async function createSessionCookie<T extends JWTPayload>(cookie: string, payload: T, maxAgeSeconds: number) {
     const expiresAt = new Date(Date.now() + maxAgeSeconds * 1000);
     const session = await encrypt(payload, expiresAt);
-    (await cookies()).set(cookie, session, { httpOnly: true, secure: true, expires: expiresAt });
+    (await cookies()).set(cookie, session, { httpOnly: true, expires: expiresAt });
 }
 
 export async function readSessionCookie<T extends ZodTypeAny>(cookie: string, schema: T): Promise<TypeOf<T> | null> {
