@@ -5,10 +5,12 @@
 import { PrismaClient } from '@prisma/client';
 import { environ } from './environ';
 import { Site, siteSchema } from './se';
+import { Queue } from 'bullmq';
 
 const globals = global as unknown as {
     prisma: PrismaClient,
     sites: Promise<Map<string, Site>>,
+    queue: Queue,
 };
 
 export const prisma = globals.prisma || new PrismaClient();
@@ -20,8 +22,7 @@ export const sites = globals.sites || (
         })
 );
 
-
-if (process.env.NODE_ENV !== 'production') {
+if (environ.NODE_ENV != "production") {
     globals.prisma = prisma;
     globals.sites = sites;
 }

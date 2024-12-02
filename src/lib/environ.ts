@@ -7,6 +7,9 @@ const environSchema = z.object({
     SE_CLIENT_SECRET: z.string(),
     SE_KEY: z.string(),
     SE_OAUTH_DOMAIN: z.string().url(),
+    NODE_ENV: z.enum(["development", "production"]),
+    SE_EMAIL: z.string(),
+    SE_PASSWORD: z.string(),
 });
 
 export const environ = environSchema.parse(process.env);
