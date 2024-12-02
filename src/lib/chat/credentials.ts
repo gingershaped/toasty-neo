@@ -1,13 +1,13 @@
 import { Host } from "@prisma/client";
 import { Cookie, CookieJar } from "tough-cookie";
-import { logger } from "./logger";
+import { logger } from "../logger";
 import got from "got";
 import parse from "node-html-parser";
-import { HOSTS } from "./chat";
+import { HOSTS } from "./util";
 import { open } from "fs/promises";
 import { PathLike } from "fs";
 import { z } from "zod";
-import { hostSchema } from "./schema";
+import { hostSchema } from "../schema";
 
 const LOGIN_HOST = "https://meta.stackexchange.com/";
 const USER_AGENT = "Mozilla/5.0 (compatible; toasty/1;)";

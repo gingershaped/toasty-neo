@@ -5,7 +5,7 @@ import { getRoom, RoomParams, TIME_FORMAT } from "./room";
 import dayjs from "dayjs";
 import { readUserSession } from "@/lib/auth/session";
 import RoomDetailsForm from "./RoomDetailsForm";
-import { userOwnedRooms } from "@/lib/chat";
+import { userOwnedRooms } from "@/lib/chat/util";
 import { userCanEdit, userCanModerate } from "@/lib/auth/utils";
 
 export default async function RoomDetails({ params }: { params: RoomParams }) {
