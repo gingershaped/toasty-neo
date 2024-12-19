@@ -18,7 +18,7 @@ export function RunEntry({ run }: { run: AntifreezeRun }) {
             {run.result == "ERROR" ? (
                 <><span className="text-danger">An error occured:&nbsp;</span>{run.error!}</>
             ) : (
-                <span>Most recent message sent at {dayjs(run.mostRecentMessage!).toISOString()}</span>
+                <span>Most recent message sent at {dayjs(run.lastMessage!).toISOString()}</span>
             )}
         </div>
     </li>;

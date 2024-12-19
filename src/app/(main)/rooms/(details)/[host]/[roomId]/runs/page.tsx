@@ -6,5 +6,5 @@ import { RoomParams, getRoom } from "../room";
 export default async function RoomRuns({ params }: { params: RoomParams }) {
     const room = await getRoom(params, { runs: true });
     
-    return <RunList runs={room.runs} />;
+    return <RunList runs={room.runs.reverse()} />;
 }

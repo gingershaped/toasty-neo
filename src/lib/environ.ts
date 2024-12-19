@@ -13,7 +13,7 @@ const environSchema = z.object({
     NODE_ENV: z.enum(["development", "production"]),
     SE_EMAIL: z.string(),
     SE_PASSWORD: z.string(),
-    ANTIFREEZE_THRESHOLD: z.number(),
+    ANTIFREEZE_THRESHOLD: z.coerce.number(),
 });
 
 export const environ = environSchema.parse(process.env);
