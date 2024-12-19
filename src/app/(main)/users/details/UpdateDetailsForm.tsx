@@ -9,7 +9,7 @@ export function UpdateDetailsForm({ associated }: { associated: { site_name: str
 
     return <form action={action}>
         <div className="mb-3">
-            <label className="form-label" htmlFor="site">Site to pull your details from</label>
+            <label className="form-label" htmlFor="site">Which site would you like to copy your details from?</label>
             <select className="form-select" name="site">
                 {associated.map(({ site_name: siteName, site_url: siteUrl }) => (
                     <option key={siteUrl} value={siteUrl}>{siteName}</option>

@@ -2,6 +2,7 @@
 
 import { readSessionCookie } from "@/lib/auth/cookie";
 import { readUserSession, UPDATE_DETAILS_COOKIE, updateDetailsPayload } from "@/lib/auth/session";
+import { flash } from "@/lib/flash";
 import { prisma, sites } from "@/lib/globals";
 import { seRequest, siteUserSchema } from "@/lib/se";
 import { parseFormData } from "@/lib/util";
@@ -38,5 +39,6 @@ export async function updateDetails(form: FormData) {
             pfp: profile.profile_image,
         },
     });
+    await flash({ severity: "success", message: "Account details updated." });
     redirect(`/users/${user.networkId}`);
 }
