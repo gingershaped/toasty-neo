@@ -66,8 +66,8 @@ export async function antifreeze(job: AntifreezeJob): Promise<AntifreezeJobResul
             const body = new FormData();
             body.set("text", message);
             body.set("fkey", fkey);
-            const response = await client.post(`chats/${roomId}/messages/new`, { body }).json<string | object>();
-            if (typeof response == "string") {
+            const response = (await client.post(`chats/${roomId}/messages/new`, { body, throwHttpErrors: false })).body;
+            if (!response.startsWith("{")) {
                 return { result: AntifreezeResult.ERROR, checkedAt: now, error: response };
             } else {
                 return { result: AntifreezeResult.ANTIFREEZED, checkedAt: now, lastMessage: lastMessage?.getTime() ?? null };
