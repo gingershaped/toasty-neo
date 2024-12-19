@@ -2,7 +2,6 @@ import { Navigation } from "@/app/_components/Navigation";
 import { ReactNode } from "react";
 import { getUser, UserParams } from "./user";
 import { RoleBadge } from "@/app/_components/UserLink";
-import Image from "next/image";
 
 export default async function UserDetailsLayout({ params, children }: { params: UserParams, children: ReactNode }) {
     const user = await getUser(params);
@@ -11,7 +10,7 @@ export default async function UserDetailsLayout({ params, children }: { params: 
             <div className="d-flex align-items-end mb-3">
                 <h1 className="flex-grow-1 border-bottom m-0 pb-1">
                     {user.username}
-                    <span className="fs-3 ms-2"><RoleBadge role={user.role} /></span>
+                    <RoleBadge role={user.role} className="fs-5 ms-3 mb-1 align-text-bottom" />
                 </h1>
                 <Navigation base={`/users/${user.networkId}`} style="tabs">
                     {{

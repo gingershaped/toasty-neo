@@ -9,10 +9,10 @@ const BADGES: Record<Role, [string, string] | null> = {
     "USER": null,
 };
 
-export function RoleBadge({ role }: { role: Role }) {
+export function RoleBadge({ role, className }: { role: Role, className?: string }) {
     const [label, color] = BADGES[role] ?? [null, null];
     return <>
-        {label != null && <span className={`badge text-bg-${color}`}>{label}</span>}
+        {label != null && <span className={`badge text-bg-${color} ${className ?? ""}`}>{label}</span>}
     </>;
 }
 
