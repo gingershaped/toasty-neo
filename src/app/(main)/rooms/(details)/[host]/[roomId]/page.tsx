@@ -35,6 +35,6 @@ export default async function RoomDetails({ params }: { params: RoomParams }) {
                 <b>Antifreezing is paused</b> because an error occured during the last antifreeze run on {dayjs(lastChecked).format(TIME_FORMAT)}.
             </div>
         )}
-        <RoomDetailsForm room={room} canEdit={editable} isModerator={user != null && userCanModerate(user)} />
+        <RoomDetailsForm room={room} canEdit={editable} isModerator={user != null && userCanModerate(user)} isDeveloper={user != null && user.role == "DEVELOPER"} />
     </div>;
 }

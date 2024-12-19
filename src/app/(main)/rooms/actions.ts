@@ -6,10 +6,12 @@ import { roomName, userOwnedRooms } from "@/lib/chat/util";
 import { prisma } from "@/lib/globals";
 import { hostSchema } from "@/lib/schema";
 import { parseFormData } from "@/lib/util";
-import { Host } from "@prisma/client";
+import { Host, Role } from "@prisma/client";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { flash } from "../../../lib/flash";
+import { credentialsForHost, environ } from "@/lib/environ";
+import { antifreeze } from "@/lib/chat/antifreeze";
 
 const modifyRoomSchema = z.object({
     host: hostSchema,
@@ -20,7 +22,7 @@ const modifyRoomSchema = z.object({
     customRoomId: z.coerce.number().optional(),
 }).refine(({ roomId, customRoomId }) => roomId == "custom" ? customRoomId != undefined : true);
 
-const deleteRoomSchema = z.object({
+const deleteOrCheckRoomSchema = z.object({
     host: hostSchema,
     roomId: z.coerce.number(),
 });
@@ -80,7 +82,7 @@ export async function modifyRoom(form: FormData): Promise<{ errors: string[] }> 
 
 export async function deleteRoom(form: FormData) {
     const user = await readUserSession() ?? redirect("/auth/login");
-    const { data, success } = parseFormData(form, deleteRoomSchema);
+    const { data, success } = parseFormData(form, deleteOrCheckRoomSchema);
     if (!success) {
         return false;
     }
@@ -99,4 +101,49 @@ export async function deleteRoom(form: FormData) {
     });
     flash({ message: "Room deleted", severity: "success" });
     redirect(`/rooms`);
+}
+
+export async function checkRoom(form: FormData) {
+    const user = await readUserSession() ?? redirect("/auth/login");
+    if (user.role != Role.DEVELOPER) {
+        return false;
+    }
+    const { data, success } = parseFormData(form, deleteOrCheckRoomSchema);
+    if (!success) {
+        return false;
+    }
+
+    const room = await prisma.room.findUnique({
+        where: {
+            // eslint-disable-next-line camelcase
+            roomId_host: data,
+        },
+    });
+    if (room == null) {
+        return false;
+    }
+
+    const credentials = await credentialsForHost(data.host);
+    const result = await antifreeze({
+        credentials,
+        roomId: data.roomId,
+        message: room.antifreezeMessage,
+        threshold: 60 * 60 * 24 * environ.ANTIFREEZE_THRESHOLD * 1000,
+    });
+    await prisma.antifreezeRun.create({
+        data: {
+            room: {
+                connect: {
+                    // eslint-disable-next-line camelcase
+                    roomId_host: data,
+                },
+            },
+            result: result.result,
+            checkedAt: new Date(result.checkedAt),
+            lastMessage: result.result != "ERROR" && result.lastMessage != null ? new Date(result.lastMessage) : null,
+            error: result.result == "ERROR" ? result.error : null,
+        },
+    });
+
+    redirect(`/rooms/${data.host.toLowerCase()}/${data.roomId}/runs`);
 }

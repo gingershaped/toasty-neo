@@ -2,9 +2,8 @@
 
 import { readSessionCookie } from "@/lib/auth/cookie";
 import { readUserSession, UPDATE_DETAILS_COOKIE, updateDetailsPayload } from "@/lib/auth/session";
-import { prisma } from "@/lib/globals";
+import { prisma, sites } from "@/lib/globals";
 import { seRequest, siteUserSchema } from "@/lib/se";
-import sites from "@/lib/globals";
 import { parseFormData } from "@/lib/util";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
