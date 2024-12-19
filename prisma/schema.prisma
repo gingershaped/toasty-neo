@@ -57,7 +57,7 @@ enum Host {
 
 model AntifreezeRun {
     id          String           @id @default(cuid())
-    room        Room             @relation(fields: [roomId, roomHost], references: [roomId, host])
+    room        Room             @relation(fields: [roomId, roomHost], references: [roomId, host], onDelete: Cascade)
     roomId      Int
     roomHost    Host
     result      AntifreezeResult
