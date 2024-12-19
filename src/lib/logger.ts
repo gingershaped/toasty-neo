@@ -1,16 +1,14 @@
 import pino from "pino";
-import { environ } from "./environ";
 
-export const logger = pino(
-    environ.NODE_ENV == "production" ? {
-        level: "info",
-    } : {
-        transport: {
-            target: "pino-pretty",
-            options: {
-                colorize: true,
-            },
+export const logger = pino({
+    transport: {
+        target: "pino-pretty",
+        options: {
+            colorize: true,
         },
-        level: "debug",
     },
-);
+    level: "debug",
+    serializers: {
+        error: pino.stdSerializers.errWithCause,
+    },
+});

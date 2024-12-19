@@ -21,6 +21,7 @@ export const sites = globals.sites || (
             return new Map(items.map((site) => siteSchema.parse(site)).map((site) => [site.site_url, site]));
         })
 );
+export const queue = new Queue("antifreeze");
 
 if (environ.NODE_ENV != "production") {
     globals.prisma = prisma;

@@ -140,6 +140,7 @@ export class Credentials {
         try {
             await file.writeFile(JSON.stringify({
                 host: this.host,
+                userId: this.userId,
                 acct: this.acct.toJSON(),
                 prov: this.prov.toJSON(),
                 chatusr: this.chatusr.toJSON(),

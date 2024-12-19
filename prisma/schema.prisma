@@ -56,14 +56,14 @@ enum Host {
 }
 
 model AntifreezeRun {
-    id                String           @id @default(cuid())
-    room              Room             @relation(fields: [roomId, roomHost], references: [roomId, host])
-    roomId            Int
-    roomHost          Host
-    result            AntifreezeResult
-    error             String?
-    mostRecentMessage DateTime?
-    checkedAt         DateTime         @default(now())
+    id          String           @id @default(cuid())
+    room        Room             @relation(fields: [roomId, roomHost], references: [roomId, host])
+    roomId      Int
+    roomHost    Host
+    result      AntifreezeResult
+    error       String?
+    lastMessage DateTime?
+    checkedAt   DateTime         @default(now())
 }
 
 enum AntifreezeResult {
