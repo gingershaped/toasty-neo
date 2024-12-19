@@ -6,7 +6,7 @@ import { finalizeLogin } from "./actions";
 export default function LoginFinalize() {
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
-        finalizeLogin(params.get("code"), params.get("state"));
+        finalizeLogin(params.get("code"), params.get("state"), params.get("error_description"));
     }, []);
     return <main className="mt-5 text-center">
         <div>

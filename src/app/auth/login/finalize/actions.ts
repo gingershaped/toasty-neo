@@ -6,8 +6,13 @@ import { Role } from "@prisma/client";
 import { redirect } from "next/navigation";
 import { fetchToken, fetchAccountDetails } from "../../actions";
 import { revalidatePath } from "next/cache";
+import { flash } from "@/lib/flash";
 
-export async function finalizeLogin(code: string | null, state: string | null) {
+export async function finalizeLogin(code: string | null, state: string | null, errorDescription: string | null) {
+    if (errorDescription != null) {
+        await flash({ severity: "danger", message: `Login failed: ${errorDescription}` });
+        redirect("/");
+    }
     if (code == null) {
         redirect("/");
     }
