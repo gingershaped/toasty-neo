@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import Header from "../_components/Header";
+import Header from "./Header";
 import { readUserSession } from "../../lib/auth/session";
 import { flashes } from "../../lib/flash";
 import { Alerts } from "./Alerts";

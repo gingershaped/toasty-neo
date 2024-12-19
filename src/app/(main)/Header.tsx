@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useSelectedLayoutSegment } from "next/navigation";
 import { User } from "@prisma/client";
-import { UserLink } from "./UserLink";
+import { UserLink } from "../_components/UserLink";
 
 export type HeaderProps = {
     user: User | null,
