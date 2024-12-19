@@ -11,7 +11,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { flash } from "../../../lib/flash";
 import { credentialsForHost, environ } from "@/lib/environ";
-import { antifreeze } from "@/lib/chat/antifreeze";
+import { antifreeze, saveAntifreezeResult } from "@/lib/chat/antifreeze";
 
 const modifyRoomSchema = z.object({
     host: hostSchema,
@@ -130,20 +130,7 @@ export async function checkRoom(form: FormData) {
         message: room.antifreezeMessage,
         threshold: 60 * 60 * 24 * environ.ANTIFREEZE_THRESHOLD * 1000,
     });
-    await prisma.antifreezeRun.create({
-        data: {
-            room: {
-                connect: {
-                    // eslint-disable-next-line camelcase
-                    roomId_host: data,
-                },
-            },
-            result: result.result,
-            checkedAt: new Date(result.checkedAt),
-            lastMessage: result.result != "ERROR" && result.lastMessage != null ? new Date(result.lastMessage) : null,
-            error: result.result == "ERROR" ? result.error : null,
-        },
-    });
+    await saveAntifreezeResult(data.roomId, data.host, result);
 
     redirect(`/rooms/${data.host.toLowerCase()}/${data.roomId}/runs`);
 }

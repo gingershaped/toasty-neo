@@ -1,11 +1,12 @@
-import { Worker } from "bullmq";
-import { AntifreezeResult } from "@prisma/client";
+import { AntifreezeResult, Host } from "@prisma/client";
 import { logger as rootLogger } from "../logger";
 import { Credentials } from "./credentials";
 import { Got } from "got";
 import parse from "node-html-parser";
 import { roomName as fetchRoomName } from "./util";
-import { environ } from "../environ";
+import { prisma } from "../globals";
+import schedule from "node-schedule";
+import { credentialsForHost, environ } from "../environ";
 
 const logger = rootLogger.child({ module: "antifreeze" });
 
@@ -81,10 +82,52 @@ export async function antifreeze(job: AntifreezeJob): Promise<AntifreezeJobResul
     }
 }
 
-export const worker = new Worker<AntifreezeJob, AntifreezeJobResult>("antifreeze", async(job) => {
-    return await antifreeze(job.data);
-}, {
-    connection: {
-        url: environ.REDIS_URL,
-    },
+export async function saveAntifreezeResult(roomId: number, host: Host, result: AntifreezeJobResult) {
+    await prisma.antifreezeRun.create({
+        data: {
+            room: {
+                connect: {
+                    // eslint-disable-next-line camelcase
+                    roomId_host: { roomId, host },
+                },
+            },
+            result: result.result,
+            checkedAt: new Date(result.checkedAt),
+            lastMessage: result.result != "ERROR" && result.lastMessage != null ? new Date(result.lastMessage) : null,
+            error: result.result == "ERROR" ? result.error : null,
+        },
+    });
+    if (result.result == "ERROR") {
+        await prisma.room.update({
+            where: {
+                // eslint-disable-next-line camelcase
+                roomId_host: { roomId, host },
+            },
+            data: {
+                state: "ERRORED",
+            },
+        });
+    }
+}
+
+schedule.cancelJob("antifreeze");
+schedule.scheduleJob("antifreeze", "*/2 * * * *", async() => {
+    logger.info("Starting scheduled antifreeze run");
+    const rooms = await prisma.room.findMany();
+    logger.info(`${rooms.length} room(s) to antifreeze`);
+    const credentials = {
+        "SE": await credentialsForHost("SE"),
+        "SO": await credentialsForHost("SO"),
+        "MSE": await credentialsForHost("MSE"),
+    };
+    for (const room of rooms) {
+        const result = await antifreeze({
+            credentials: credentials[room.host],
+            roomId: room.roomId,
+            message: room.antifreezeMessage,
+            threshold: environ.ANTIFREEZE_THRESHOLD,
+        });
+        await saveAntifreezeResult(room.roomId, room.host, result);
+    }
+    logger.info("Antifreeze completed");
 });
