@@ -8,6 +8,10 @@ export type RoomEditFormProps = {
 
 export function RoomEditForm({ isModerator, message, run, locked, readOnly }: RoomEditFormProps) {
     return <>
+        <div className="form-check form-switch mb-3">
+            <input className="form-check-input" type="checkbox" role="switch" id="run-antifreeze" name="active" defaultChecked={run ?? true} disabled={readOnly} />
+            <label className="form-check-label" htmlFor="run-antifreeze">Run antifreeze</label>
+        </div>
         <div className="mb-3">
             <label htmlFor="room-message" className="form-label">Antifreeze message to send</label>
             <input type="text" className="form-control" id="room-message" name="message" maxLength={128} defaultValue={message ?? "---"} disabled={readOnly} />
@@ -19,13 +23,14 @@ export function RoomEditForm({ isModerator, message, run, locked, readOnly }: Ro
                 If the message <code>---</code> is used, it will not be shown in the transcript.
             </div>
         </div>
-        <div className="form-check form-switch">
-            <input className="form-check-input" type="checkbox" role="switch" id="run-antifreeze" name="active" defaultChecked={run ?? true} disabled={readOnly} />
-            <label className="form-check-label" htmlFor="run-antifreeze">Run antifreeze</label>
-        </div>
-        {isModerator && <div className="form-check form-switch">
-            <input className="form-check-input" type="checkbox" role="switch" id="locked" name="locked" defaultChecked={locked ?? false} disabled={readOnly} />
-            <label className="form-check-label" htmlFor="locked">Locked</label>
-        </div>}
+        {isModerator && (
+            <div className="border border-danger rounded p-2">
+                <h5>Moderator options</h5>
+                <div className="form-check form-switch">
+                    <input className="form-check-input" type="checkbox" role="switch" id="locked" name="locked" defaultChecked={locked ?? false} disabled={readOnly} />
+                    <label className="form-check-label" htmlFor="locked">Locked</label>
+                </div>
+            </div>
+        )}
     </>;
 }
