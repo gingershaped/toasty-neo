@@ -9,9 +9,7 @@ import { PathLike } from "fs";
 import { z } from "zod";
 import { hostSchema } from "../schema";
 
-const LOGIN_HOST = "https://meta.stackexchange.com/";
 const USER_AGENT = "Mozilla/5.0 (compatible; toasty/1;)";
-const COOKIE_ROOT = "https://stackexchange.com";
 
 const rootLogger = logger.child({ module: "bot" });
 
@@ -46,8 +44,9 @@ export class Credentials {
 
     cookieJar() {
         const jar = new CookieJar();
-        jar.setCookieSync(this.acct, COOKIE_ROOT);
-        jar.setCookieSync(this.prov, COOKIE_ROOT);
+        const cookieRoot = this.host == "SO" ? "https://stackoverflow.com" : "https://stackexchange.com";
+        jar.setCookieSync(this.acct, cookieRoot);
+        jar.setCookieSync(this.prov, cookieRoot);
         jar.setCookieSync(this.chatusr, HOSTS[this.host].toString());
         return jar;
     }
@@ -65,11 +64,13 @@ export class Credentials {
     static async authenticate(email: string, password: string, host: Host) {
         this.logger.info(`Logging into ${host}`);
         const chatUserCookie = host == "SE" ? "sechatusr" : "chatusr";
+        const loginHost = host == "SO" ? "https://stackoverflow.com" : "https://meta.stackexchange.com";
+        const cookieRoot = host == "SO" ? "https://stackoverflow.com" : "https://stackexchange.com";
         
         const qaCookieJar = new CookieJar();
         const qaClient = got.extend({
             cookieJar: qaCookieJar,
-            prefixUrl: LOGIN_HOST,
+            prefixUrl: loginHost,
             headers: {
                 "User-Agent": USER_AGENT,
             },
@@ -90,7 +91,7 @@ export class Credentials {
         trackForm.set("oauthserver", "");
         const trackResponse = await qaClient.post("users/login-or-signup/validation/track", { body: trackForm });
         if (!trackResponse.ok) {
-            throw new Error(`MSE responded with a non-ok status code ${trackResponse.statusCode}`);
+            throw new Error(`Login host responded with a non-ok status code ${trackResponse.statusCode}`);
         }
         const loginForm = new FormData();
         loginForm.set("fkey", qaFkey);
@@ -103,16 +104,16 @@ export class Credentials {
         if (loginResponse.statusCode != 302) {
             throw new Error("Login failed! Incorrect username or password?");
         }
-        const redirectTarget = new URL(loginResponse.headers["location"]!, LOGIN_HOST);
+        const redirectTarget = new URL(loginResponse.headers["location"]!, loginHost);
         if (redirectTarget.pathname != "/") {
             throw new Error(`Login failed! Redirected to ${redirectTarget}; caught by captcha?`);
         }
 
-        const { acct, prov } = Object.fromEntries(qaCookieJar.getCookiesSync(COOKIE_ROOT).map((cookie) => [cookie.key, cookie]));
+        const { acct, prov } = Object.fromEntries(qaCookieJar.getCookiesSync(cookieRoot).map((cookie) => [cookie.key, cookie]));
 
         const chatCookieJar = new CookieJar();
-        chatCookieJar.setCookieSync(acct, COOKIE_ROOT);
-        chatCookieJar.setCookieSync(prov, COOKIE_ROOT);
+        chatCookieJar.setCookieSync(acct, cookieRoot);
+        chatCookieJar.setCookieSync(prov, cookieRoot);
         const chatClient = got.extend({
             cookieJar: chatCookieJar,
             prefixUrl: HOSTS[host],
