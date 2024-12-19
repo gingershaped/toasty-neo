@@ -12,7 +12,7 @@ export async function fetchChatId(host: Host, networkId: number) {
 }
 
 export async function userOwnedRooms(host: Host, networkId: number) {
-    const root = parse(await fetch(new URL(`/users/${await fetchChatId(host, networkId)}`, HOSTS[host])).then((r) => r.text()));
+    const root = parse(await fetch(new URL(`/users/${await fetchChatId(host, networkId)}`, HOSTS[host]), { cache: "force-cache", next: { revalidate: 60 } }).then((r) => r.text()));
     return root.getElementById("user-owningcards")
         ?.querySelectorAll(".roomcard")
         ?.filter((element) => !element.classList.contains("frozen"))
