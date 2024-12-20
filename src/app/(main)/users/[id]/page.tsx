@@ -4,6 +4,7 @@ import { readUserSession } from "@/lib/auth/session";
 import dayjs from "dayjs";
 import { userCanModerate } from "@/lib/auth/utils";
 import { ModOptions } from "./ModOptions";
+import { LoadingLink } from "@/app/_components/LoadingButton";
 
 export default async function UserDetails({ params }: { params: UserParams }) {
     const currentUser = await readUserSession();
@@ -18,7 +19,7 @@ export default async function UserDetails({ params }: { params: UserParams }) {
             <input type="text" className="form-control text-secondary" id="username" value={targetUser.username} readOnly />
         </div>
         {currentUser?.networkId == targetUser.networkId && (
-            <Link href="/auth/login?state=details" className="btn btn-primary mb-3">Update account details</Link>
+            <LoadingLink href="/auth/login?state=details" variant="primary" className="mb-3">Update account details</LoadingLink>
         )}
         <div className="mb-3">
             Account created: {dayjs(targetUser.joinedAt).toISOString()}

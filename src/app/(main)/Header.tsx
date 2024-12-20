@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useSelectedLayoutSegment } from "next/navigation";
 import { User } from "@prisma/client";
 import { UserLink } from "../_components/UserLink";
+import { LoadingLink } from "../_components/LoadingButton";
 
 export type HeaderProps = {
     user: User | null,
@@ -33,7 +34,7 @@ export default function Header({ user, children: routeNames }: HeaderProps) {
                         <li><Link className="dropdown-item text-danger" href="/auth/logout">Log out</Link></li>
                     </ul>
                 </div>
-            ) : <Link className="btn btn-primary" href="/auth/login">Log in</Link>}
+            ) : <LoadingLink variant="primary" href="/auth/login">Log in</LoadingLink>}
         </div>
     </nav>;
 }
