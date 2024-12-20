@@ -16,18 +16,18 @@ export default async function RoomDetails({ params }: { params: RoomParams }) {
     const lastChecked = room.runs.at(-1)?.checkedAt;
 
     return <div>
-        <div className="d-flex flex-column flex-sm-row justify-content-evenly mb-3">
+        <div className="d-flex flex-column flex-sm-row justify-content-evenly align-items-center mb-3">
             <div>
                 <span className="text-secondary-emphasis">added by&nbsp;</span>
-                <UserLink className="float-end" user={room.jobCreator} />
+                <UserLink user={room.jobCreator} />
             </div>
             <div>
                 <span className="text-secondary-emphasis">last antifreeze&nbsp;</span>
-                <span className="float-end">{lastAntifreeze != null ? dayjs(lastAntifreeze).format(TIME_FORMAT) : "never"}</span>
+                <span>{lastAntifreeze != null ? dayjs(lastAntifreeze).format(TIME_FORMAT) : "never"}</span>
             </div>
             <div>
                 <span className="text-secondary-emphasis">last checked&nbsp;</span>
-                <span className="float-end">{lastAntifreeze != null ? dayjs(lastChecked).format(TIME_FORMAT) : "never"}</span>
+                <span>{lastAntifreeze != null ? dayjs(lastChecked).format(TIME_FORMAT) : "never"}</span>
             </div>
         </div>
         {(room.state == "ERRORED" && lastChecked != null) && (

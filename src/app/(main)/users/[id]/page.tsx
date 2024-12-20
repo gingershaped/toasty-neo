@@ -10,7 +10,7 @@ export default async function UserDetails({ params }: { params: UserParams }) {
     const currentUser = await readUserSession();
     const targetUser = await getUser(params);
     return <div>
-        <div className="d-flex flex-column flex-sm-row justify-content-evenly mb-3">
+        <div className="d-flex flex-row justify-content-evenly mb-3">
             <Link href={`https://stackexchange.com/users/${targetUser.networkId}`}>Network profile</Link>
             <Link href={`https://chat.stackexchange.com/accounts/${targetUser.networkId}`}>Chat profile</Link>
         </div>

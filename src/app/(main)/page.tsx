@@ -6,7 +6,7 @@ export default async function Index() {
     const user = await readUserSession();
     const roomCount = await prisma.room.count();
     return <div className="row justify-content-center">
-        <div className="col-7">
+        <div className="col-sm-7">
             <section className="w-100 bg-body-tertiary rounded p-3">
                 <h1>Toasty Antifreeze</h1>
                 <hr />
