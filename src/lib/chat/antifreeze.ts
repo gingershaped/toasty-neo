@@ -7,6 +7,7 @@ import { roomName as fetchRoomName } from "./util";
 import { prisma } from "../globals";
 import schedule from "node-schedule";
 import { credentialsForHost, environ } from "../environ";
+import dayjs from "dayjs";
 
 const logger = rootLogger.child({ module: "antifreeze" });
 
@@ -41,44 +42,48 @@ async function lastMessageInRoom(client: Got, fkey: string, roomId: number) {
     if (userMessages.length == 0) {
         return null;
     }
-    return new Date(userMessages.at(-1)!["time_stamp"] * 1000);
+    return dayjs.unix(userMessages.at(-1)!["time_stamp"]);
 }
 
 export async function antifreeze(job: AntifreezeJob): Promise<AntifreezeJobResult> {
-    const { credentials, roomId, message, threshold } = job;
-    const now = Date.now();
+    const { credentials, roomId, message: rawMessage, threshold } = job;
+    const now = dayjs();
     logger.info(`Starting antifreeze job for room ${roomId} on host ${credentials.host}`);
 
     try {
         const client = credentials.client();
         const fkey = await scrapeFkey(client);
         if (fkey == null) {
-            return { result: AntifreezeResult.ERROR, checkedAt: now, error: "Could not scrape fkey" };
+            return { result: AntifreezeResult.ERROR, checkedAt: now.valueOf(), error: "Could not scrape fkey" };
         }
 
         const roomName = await fetchRoomName(credentials.host, roomId);
         logger.info(`Room name: ${roomName}`);
         const lastMessage = await lastMessageInRoom(client, fkey, roomId);
         logger.info(`Last message in room: ${lastMessage?.toISOString() ?? "<never>"}`);
-
-        if (lastMessage == null || now - lastMessage.getTime() > threshold) {
+        
+        if (lastMessage == null || now.diff(lastMessage) > threshold) {
             logger.info("Antifreezing!");
+
+            const message = rawMessage
+                .replace("{days}", lastMessage != null ? `${now.diff(lastMessage, "days")}` : "???");
+
             const body = new FormData();
             body.set("text", message);
             body.set("fkey", fkey);
             const response = (await client.post(`chats/${roomId}/messages/new`, { body, throwHttpErrors: false })).body;
             if (!response.startsWith("{")) {
-                return { result: AntifreezeResult.ERROR, checkedAt: now, error: response };
+                return { result: AntifreezeResult.ERROR, checkedAt: now.valueOf(), error: response };
             } else {
-                return { result: AntifreezeResult.ANTIFREEZED, checkedAt: now, lastMessage: lastMessage?.getTime() ?? null };
+                return { result: AntifreezeResult.ANTIFREEZED, checkedAt: now.valueOf(), lastMessage: lastMessage?.valueOf() ?? null };
             }
         } else {
             logger.info("No antifreeze needed, skipping");
-            return { result: AntifreezeResult.OK, checkedAt: now, lastMessage: lastMessage.getTime() };
+            return { result: AntifreezeResult.OK, checkedAt: now.valueOf(), lastMessage: lastMessage.valueOf() };
         }
     } catch (error) {
         logger.error({ error }, "An error occured:");
-        return { result: AntifreezeResult.ERROR, checkedAt: now, error: "An internal error occured" };
+        return { result: AntifreezeResult.ERROR, checkedAt: now.valueOf(), error: "An internal error occured" };
     }
 }
 
