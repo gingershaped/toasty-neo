@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useSelectedLayoutSegment } from "next/navigation";
+import { ReactNode } from "react";
 
 export type NavigationProps = {
     style?: "tabs" | "pills" | "underline",
@@ -21,4 +22,21 @@ export function Navigation({ style, base, children: routeNames }: NavigationProp
             >{label}</Link>
         ))}
     </nav>;
+}
+
+export type TabbedHeaderProps = {
+    base: string,
+    nav: Record<string, string>,
+    children: ReactNode,
+};
+
+export function TabbedHeader({ base, nav, children }: TabbedHeaderProps) {
+    return <div className="d-flex align-items-sm-end flex-column flex-sm-row mb-3">
+        <h1 className="flex-grow-1 border-bottom-sm m-0 pb-2 pb-sm-1">
+            {children}
+        </h1>
+        <Navigation base={base} style="tabs">
+            {nav}
+        </Navigation>
+    </div>;
 }

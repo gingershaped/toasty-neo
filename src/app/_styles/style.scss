@@ -7,14 +7,20 @@
 @import "bootstrap/scss/utilities";
 
 $utilities: map-merge(
-  $utilities,
-  (
-    "container-type": (
-        property: container-type,
-        class: container-type,
-        values: size inline-size normal,
-        responsive: true,
-    )
+    $utilities,
+    (
+        "container-type": (
+            property: container-type,
+            class: container-type,
+            values: size inline-size normal,
+            responsive: true,
+        ),
+        "border-bottom": map-merge(
+            map-get($utilities, "border-bottom"),
+            (
+                responsive: true,
+            )
+        )
     )
 );
 
