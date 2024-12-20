@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/globals";
 import { readUserSession } from "../../lib/auth/session";
 import Link from "next/link";
+import { LoadingLink } from "../_components/LoadingButton";
 
 export default async function Index() {
     const user = await readUserSession();
@@ -15,7 +16,9 @@ export default async function Index() {
                 </p>
                 <p>
                     {user == null ? (
-                        <Link href="/auth/login" className="btn btn-primary">Log in with Stack Exchange</Link>
+                        <LoadingLink href="/auth/login" variant="primary">
+                            Log in with Stack Exchange
+                        </LoadingLink>
                     ) : (
                         <Link href="/rooms/add" className="btn btn-primary">Add a room</Link>
                     )}
