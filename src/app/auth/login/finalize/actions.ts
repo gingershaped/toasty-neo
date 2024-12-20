@@ -22,19 +22,26 @@ export async function finalizeLogin(code: string | null, state: string | null, e
         return { error: tokenError };
     }
     const { associated, primaryAccount, hasSufficientReputation, isModerator } = await fetchAccountDetails(token);
-    const role = hasSufficientReputation ? (isModerator ? Role.MODERATOR : Role.USER) : Role.UNVERIFIED;
-    const user = await prisma.user.upsert({
+    const newRole = hasSufficientReputation ? (isModerator ? Role.MODERATOR : Role.USER) : Role.UNVERIFIED;
+    let user = await prisma.user.upsert({
         create: {
             networkId: primaryAccount.account_id,
             username: primaryAccount.display_name,
             pfp: primaryAccount.profile_image,
-            role,
+            role: newRole,
         },
         update: {},
         where: {
             networkId: primaryAccount.account_id,
         },
     });
+    if (user.role != Role.DEVELOPER && user.role != newRole) {
+        user = await prisma.user.update({
+            where: { networkId: user.networkId },
+            data: { role: newRole },
+        });
+    }
+
     revalidatePath("/");
     await createSessionCookie<SessionPayload>(SESSION_COOKIE, { id: user.networkId }, SESSION_COOKIE_MAX_AGE);
 
