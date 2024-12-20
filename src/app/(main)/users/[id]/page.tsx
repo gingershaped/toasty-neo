@@ -16,7 +16,7 @@ export default async function UserDetails({ params }: { params: UserParams }) {
         </div>
         <div className="mb-3">
             <label htmlFor="username" className="form-label">Username</label>
-            <input type="text" className="form-control text-secondary" id="username" value={targetUser.username} readOnly />
+            <input type="text" className="form-control" id="username" value={targetUser.username} disabled />
         </div>
         {currentUser?.networkId == targetUser.networkId && (
             <LoadingLink href="/auth/login?state=details" variant="primary" className="mb-3">Update account details</LoadingLink>
