@@ -16,7 +16,7 @@ export default async function MainLayout({ children }: { children: ReactNode }) 
             }}
         </Header>
         <Alerts flashList={flashList} />
-        <main className="container-lg mt-5">
+        <main className="container-lg mt-5 mb-3">
             {children}
         </main>
         <footer className="bg-body-tertiary border-top ps-4 p-2 mt-auto hstack text-muted">
