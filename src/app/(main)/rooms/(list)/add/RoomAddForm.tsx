@@ -18,7 +18,7 @@ export function RoomAddForm({ isModerator }: { isModerator: boolean }) {
     );
     
     return <form className="row" action={action}>
-        <div className="col-5 vstack">
+        <div className="col-sm-5 vstack mb-3 mb-sm-0">
             <select className="form-select mb-2" name="host" onChange={(e) => setHost(e.target.value as Host)}>
                 <option value={Host.SE}>Stack Exchange</option>
                 <option value={Host.MSE}>Meta Stack Exchange</option>
@@ -26,7 +26,7 @@ export function RoomAddForm({ isModerator }: { isModerator: boolean }) {
             </select>
             <input type="search" className="form-control mb-2" placeholder="Filter rooms" value={searchQuery} onInput={(e) => setSearchQuery(e.currentTarget.value)} />
             <div className="border rounded flex-grow-1">
-                <div className="rounded overflow-y-auto h-100" style={{ containerType: "size", clipPath: "content-box" }}>
+                <div className="rounded overflow-y-auto h-100 container-type-sm-size" style={{ clipPath: "content-box" }}>
                     {ownedRoomsError != null && <div className="text-danger text-center">Failed to fetch rooms</div>}
                     {loadingOwnedRooms && (
                         <div className="w-100 text-center mt-3">
@@ -61,7 +61,7 @@ export function RoomAddForm({ isModerator }: { isModerator: boolean }) {
             </div>
             <div className="form-text">only rooms you are an owner of are listed</div>
         </div>
-        <div className="col-7">
+        <div className="col-sm-7">
             <RoomEditForm isModerator={isModerator} />
             <hr className="mt-4 mb-2" />
             <LoadingButton
