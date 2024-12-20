@@ -2,9 +2,7 @@
 
 import { RunList } from "@/app/(main)/rooms/(details)/[host]/[roomId]/runs/RunList";
 import { getRoom, RoomParams } from "../room";
-import { prisma } from "@/lib/globals";
 import { fetchRuns } from "./actions";
-import { hostSchema } from "@/lib/schema";
 
 export default async function RoomRuns({ params }: { params: RoomParams }) {
     const room = await getRoom(params);

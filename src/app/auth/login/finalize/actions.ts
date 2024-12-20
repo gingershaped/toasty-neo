@@ -7,6 +7,7 @@ import { redirect } from "next/navigation";
 import { fetchToken, fetchAccountDetails } from "../../actions";
 import { revalidatePath } from "next/cache";
 import { flash } from "@/lib/flash";
+import { checkPermissions } from "@/lib/auth/check";
 
 export async function finalizeLogin(code: string | null, state: string | null, errorDescription: string | null) {
     if (errorDescription != null) {
@@ -41,6 +42,7 @@ export async function finalizeLogin(code: string | null, state: string | null, e
         await createSessionCookie<UpdateDetailsPayload>(UPDATE_DETAILS_COOKIE, { associated, token }, UPDATE_DETAILS_MAX_AGE);
         redirect("/users/details");
     } else {
+        await checkPermissions(user);
         redirect("/");
     }
 }
