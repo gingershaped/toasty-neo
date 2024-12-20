@@ -1,7 +1,3 @@
-export default async function RoomDetailsLoading() {
-    return <div className="mt-4 text-center w-100">
-        <div className="spinner-border" role="status">
-            <span className="visually-hidden">Loading...</span>
-        </div>
-    </div>;
-}
+import { Loading } from "@/app/_components/Loading";
+
+export default Loading;
