@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 import { useCallback, useState } from "react";
 import { fetchRuns } from "./actions";
 import { LoadingButton } from "@/app/_components/LoadingButton";
+import { FETCH_SIZE } from "./constants";
 
 const RUN_RESULT_BADGES: Record<AntifreezeResult, [string, string]> = {
     "ANTIFREEZED": ["primary", "Antifreezed"],
@@ -32,18 +33,20 @@ export function RunEntry({ run }: { run: AntifreezeRun }) {
 export function RunList({ initialRuns, host, roomId }: { initialRuns: AntifreezeRun[], host: Host, roomId: number }) {
     const [loading, setLoading] = useState<boolean>(false);
     const [runs, setRuns] = useState<AntifreezeRun[]>(initialRuns);
+    const [hasMore, setHasMore] = useState<boolean>(initialRuns.length >= FETCH_SIZE);
 
     const loadMore = useCallback(async() => {
         setLoading(true);
         const newRuns = await fetchRuns(host, roomId, runs.at(-1)!.id).finally(() => setLoading(false));
         setRuns([...runs, ...newRuns]);
+        setHasMore(newRuns.length >= FETCH_SIZE);
     }, [runs, host, roomId]);
 
     return <>
         <ul className="list-group mt-1">
             {runs.map((run) => <RunEntry key={run.id} run={run} />)}
         </ul>
-        <div className="vstack">
+        {hasMore && <div className="vstack">
             <LoadingButton
                 loading={loading}
                 variant="primary"
@@ -52,6 +55,6 @@ export function RunList({ initialRuns, host, roomId }: { initialRuns: Antifreeze
             >
                 Load more runs
             </LoadingButton>
-        </div>
+        </div>}
     </>;
 }

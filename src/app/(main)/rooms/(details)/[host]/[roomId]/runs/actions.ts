@@ -2,8 +2,7 @@
 
 import { prisma } from "@/lib/globals";
 import { Host } from "@prisma/client";
-
-const FETCH_SIZE = 30;
+import { FETCH_SIZE } from "./constants";
 
 export async function fetchRuns(host: Host, roomId: number, before: string | null) {
     return await prisma.antifreezeRun.findMany({
