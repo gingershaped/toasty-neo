@@ -53,7 +53,7 @@ export async function modifyRoom(form: FormData): Promise<{ errors: string[] }> 
     if (name == null) {
         return { errors: ["Room does not exist"] };
     }
-    await prisma.room.upsert({
+    const room = await prisma.room.upsert({
         where: {
             // eslint-disable-next-line camelcase
             roomId_host: {
@@ -76,7 +76,15 @@ export async function modifyRoom(form: FormData): Promise<{ errors: string[] }> 
             locked: data.locked,
             state: data.active ? "ACTIVE" : "PAUSED",
         },
+        include: {
+            runs: {
+                take: 1,
+            },
+        },
     });
+    if (room.runs.length == 0) {
+        await antifreezeSingleRoom(room.roomId, room.host, room.antifreezeMessage);
+    }
     redirect(`/rooms/${data.host.toLowerCase()}/${roomId}`);
 }
 
@@ -103,6 +111,17 @@ export async function deleteRoom(form: FormData) {
     redirect(`/rooms`);
 }
 
+async function antifreezeSingleRoom(roomId: number, host: Host, message: string) {
+    const credentials = await credentialsForHost(host);
+    const result = await antifreeze({
+        credentials,
+        roomId: roomId,
+        message,
+        threshold: 60 * 60 * 24 * environ.ANTIFREEZE_THRESHOLD * 1000,
+    });
+    await saveAntifreezeResult(roomId, host, result);
+}
+
 export async function checkRoom(form: FormData) {
     const user = await readUserSession() ?? redirect("/auth/login");
     if (user.role != Role.DEVELOPER) {
@@ -123,14 +142,7 @@ export async function checkRoom(form: FormData) {
         return false;
     }
 
-    const credentials = await credentialsForHost(data.host);
-    const result = await antifreeze({
-        credentials,
-        roomId: data.roomId,
-        message: room.antifreezeMessage,
-        threshold: 60 * 60 * 24 * environ.ANTIFREEZE_THRESHOLD * 1000,
-    });
-    await saveAntifreezeResult(data.roomId, data.host, result);
+    await antifreezeSingleRoom(data.roomId, data.host, room.antifreezeMessage);
 
     redirect(`/rooms/${data.host.toLowerCase()}/${data.roomId}/runs`);
 }
