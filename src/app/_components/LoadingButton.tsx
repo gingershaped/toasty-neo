@@ -54,7 +54,7 @@ export function LoadingLink({ href, variant, className, children }: LoadingLinkP
             className={`position-relative btn btn-${variant} ${className ?? ""} ${loading ? "disabled" : ""}`}
             role="button"
             onClick={() => setLoading(true)}
-            preload={false}
+            prefetch={false}
         >
             <LoadingContent loading={loading}>{children}</LoadingContent>
         </Link>
