@@ -4,7 +4,6 @@ import { Credentials } from "./chat/credentials";
 
 const environSchema = z.object({
     DATABASE_URL: z.string().url(),
-    REDIS_URL: z.string().url(),
     SESSION_KEY: z.string().base64(),
     SE_CLIENT_ID: z.string(),
     SE_CLIENT_SECRET: z.string(),
