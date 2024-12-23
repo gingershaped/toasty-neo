@@ -62,7 +62,7 @@ export async function antifreeze(job: AntifreezeJob): Promise<AntifreezeJobResul
         const lastMessage = await lastMessageInRoom(client, fkey, roomId);
         logger.info(`Last message in room: ${lastMessage?.toISOString() ?? "<never>"}`);
         
-        if (lastMessage == null || now.diff(lastMessage) > threshold) {
+        if (lastMessage == null || now.diff(lastMessage, "days") > threshold) {
             logger.info("Antifreezing!");
 
             const message = rawMessage
