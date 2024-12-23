@@ -116,7 +116,7 @@ export async function saveAntifreezeResult(roomId: number, host: Host, result: A
 }
 
 schedule.cancelJob("antifreeze");
-schedule.scheduleJob("antifreeze", "* 0 * * *", async() => {
+schedule.scheduleJob("antifreeze", "0 0 * * *", async() => {
     logger.info("Starting scheduled antifreeze run");
     const rooms = await prisma.room.findMany({
         where: { state: "ACTIVE" },
