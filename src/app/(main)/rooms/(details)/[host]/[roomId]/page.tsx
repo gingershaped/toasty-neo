@@ -27,7 +27,7 @@ export default async function RoomDetails({ params }: { params: RoomParams }) {
             </div>
             <div>
                 <span className="text-secondary-emphasis">last checked&nbsp;</span>
-                <span>{lastAntifreeze != null ? dayjs(lastChecked).format(TIME_FORMAT) : "never"}</span>
+                <span>{lastChecked != null ? dayjs(lastChecked).format(TIME_FORMAT) : "never"}</span>
             </div>
         </div>
         {(room.state == "ERRORED" && lastChecked != null) && (
