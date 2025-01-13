@@ -6,6 +6,7 @@ import { useCallback, useState } from "react";
 import { fetchRuns } from "./actions";
 import { LoadingButton } from "@/app/_components/LoadingButton";
 import { FETCH_SIZE } from "./constants";
+import { TIME_FORMAT } from "../room";
 
 const RUN_RESULT_BADGES: Record<AntifreezeResult, [string, string]> = {
     "ANTIFREEZED": ["primary", "Antifreezed"],
@@ -17,14 +18,14 @@ export function RunEntry({ run }: { run: AntifreezeRun }) {
     const [badgeColor, badgeLabel] = RUN_RESULT_BADGES[run.result];
     return <li className="list-group-item">
         <div className="d-flex">
-            <span className="me-auto">{dayjs(run.checkedAt).toISOString()}</span>
+            <span className="me-auto">{dayjs(run.checkedAt).format(TIME_FORMAT)}</span>
             <span className={`badge text-bg-${badgeColor} align-self-baseline`}>{badgeLabel}</span>
         </div>
         <div className="form-text">
             {run.result == "ERROR" ? (
                 <><span className="text-danger">An error occured:&nbsp;</span>{run.error!}</>
             ) : (
-                <span>Most recent message sent at {dayjs(run.lastMessage!).toISOString()}</span>
+                <span>Most recent message sent at {dayjs(run.lastMessage!).format(TIME_FORMAT)}</span>
             )}
         </div>
     </li>;

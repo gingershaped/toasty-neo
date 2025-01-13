@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 import { userCanModerate } from "@/lib/auth/utils";
 import { ModOptions } from "./ModOptions";
 import { LoadingLink } from "@/app/_components/LoadingButton";
+import { TIME_FORMAT } from "../../rooms/(details)/[host]/[roomId]/room";
 
 export default async function UserDetails({ params }: { params: UserParams }) {
     const currentUser = await readUserSession();
@@ -22,7 +23,7 @@ export default async function UserDetails({ params }: { params: UserParams }) {
             <LoadingLink href="/auth/login?state=details" variant="primary" className="mb-3">Update account details</LoadingLink>
         )}
         <div className="mb-3">
-            Account created: {dayjs(targetUser.joinedAt).toISOString()}
+            Account created: {dayjs(targetUser.joinedAt).format(TIME_FORMAT)}
         </div>
         {(currentUser != null && userCanModerate(currentUser) && (!userCanModerate(targetUser) || currentUser.role == "DEVELOPER")) && <ModOptions targetUser={targetUser} canChangeRole={currentUser.role == "DEVELOPER"} />}
     </div>;
