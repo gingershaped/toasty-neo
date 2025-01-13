@@ -5,7 +5,6 @@ import { Got } from "got";
 import parse from "node-html-parser";
 import { roomName as fetchRoomName } from "./util";
 import { prisma } from "../globals";
-import schedule from "node-schedule";
 import { credentialsForHost, environ } from "../environ";
 import dayjs from "dayjs";
 
@@ -115,8 +114,7 @@ export async function saveAntifreezeResult(roomId: number, host: Host, result: A
     }
 }
 
-schedule.cancelJob("antifreeze");
-schedule.scheduleJob("antifreeze", "0 0 * * *", async() => {
+export async function scheduledAntifreeze() {
     logger.info("Starting scheduled antifreeze run");
     const rooms = await prisma.room.findMany({
         where: { state: "ACTIVE" },
@@ -137,4 +135,4 @@ schedule.scheduleJob("antifreeze", "0 0 * * *", async() => {
         await saveAntifreezeResult(room.roomId, room.host, result);
     }
     logger.info("Antifreeze completed");
-});
+}
