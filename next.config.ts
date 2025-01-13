@@ -9,7 +9,7 @@ const nextConfig: NextConfig = {
             },
         ],
     },
-    serverExternalPackages: ["pino", "pino-pretty", "bullmq"],
+    serverExternalPackages: ["pino", "pino-pretty"],
     sassOptions: {
         silenceDeprecations: ["import", "legacy-js-api"],
         quietDeps: true,
