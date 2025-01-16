@@ -6,7 +6,7 @@ import { roomName, userOwnedRooms } from "@/lib/chat/util";
 import { prisma } from "@/lib/globals";
 import { hostSchema } from "@/lib/schema";
 import { parseFormData } from "@/lib/util";
-import { Host, Role } from "@prisma/client";
+import { Host, Role, RoomState } from "@prisma/client";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { flash } from "../../../lib/flash";
@@ -42,7 +42,7 @@ export async function modifyRoom(form: FormData): Promise<{ errors: string[] }> 
         ) };
     }
     const ownedRooms = (await userOwnedRooms(data.host, user.networkId)).map(({ id }) => parseInt(id));
-    if ((data.locked || data.roomId == "custom" || !ownedRooms.includes(data.roomId)) && !userCanModerate(user)) {
+    if ((data.roomId == "custom" || !ownedRooms.includes(data.roomId)) && !userCanModerate(user)) {
         return { errors: ["Insufficent permissions"] };
     }
     if (!userCanEdit(user)) {
@@ -53,6 +53,12 @@ export async function modifyRoom(form: FormData): Promise<{ errors: string[] }> 
     if (name == null) {
         return { errors: ["Room does not exist"] };
     }
+    const updatedData = {
+        name,
+        antifreezeMessage: data.message,
+        locked: userCanModerate(user) ? data.locked: undefined,
+        state: data.active ? "ACTIVE": "PAUSED" as RoomState,
+    };
     const room = await prisma.room.upsert({
         where: {
             // eslint-disable-next-line camelcase
@@ -62,20 +68,12 @@ export async function modifyRoom(form: FormData): Promise<{ errors: string[] }> 
             },
         },
         create: {
-            antifreezeMessage: data.message,
+            ...updatedData,
             host: data.host,
             roomId,
-            name,
             jobCreator: { connect: { networkId: user.networkId } },
-            locked: data.locked,
-            state: data.active ? "ACTIVE": "PAUSED",
         },
-        update: {
-            name,
-            antifreezeMessage: data.message,
-            locked: data.locked,
-            state: data.active ? "ACTIVE" : "PAUSED",
-        },
+        update: updatedData,
         include: {
             runs: {
                 take: 1,
