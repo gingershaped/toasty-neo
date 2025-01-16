@@ -1,7 +1,8 @@
 "use server";
 
 import { UserLink } from "@/app/_components/UserLink";
-import { getRoom, RoomParams, TIME_FORMAT } from "./room";
+import { getRoom, RoomParams } from "./room";
+import { TIME_FORMAT } from "@/lib/util";
 import dayjs from "dayjs";
 import { readUserSession } from "@/lib/auth/session";
 import RoomDetailsForm from "./RoomDetailsForm";

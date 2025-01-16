@@ -6,7 +6,7 @@ import { useCallback, useState } from "react";
 import { fetchRuns } from "./actions";
 import { LoadingButton } from "@/app/_components/LoadingButton";
 import { FETCH_SIZE } from "./constants";
-import { TIME_FORMAT } from "../room";
+import { TIME_FORMAT } from "@/lib/util";
 
 const RUN_RESULT_BADGES: Record<AntifreezeResult, [string, string]> = {
     "ANTIFREEZED": ["primary", "Antifreezed"],

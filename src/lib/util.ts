@@ -5,3 +5,4 @@ export function parseFormData<T extends z.ZodTypeAny>(form: FormData, schema: T)
         Object.fromEntries([...form.entries()].map(([k, v]) => [k, v.toString()])),
     );
 }
+export const TIME_FORMAT = "MMM D, YYYY";

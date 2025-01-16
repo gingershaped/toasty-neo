@@ -5,7 +5,7 @@ import dayjs from "dayjs";
 import { userCanModerate } from "@/lib/auth/utils";
 import { ModOptions } from "./ModOptions";
 import { LoadingLink } from "@/app/_components/LoadingButton";
-import { TIME_FORMAT } from "../../rooms/(details)/[host]/[roomId]/room";
+import { TIME_FORMAT } from "@/lib/util";
 
 export default async function UserDetails({ params }: { params: UserParams }) {
     const currentUser = await readUserSession();
