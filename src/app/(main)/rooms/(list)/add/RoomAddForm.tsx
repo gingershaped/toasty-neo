@@ -29,7 +29,7 @@ export function RoomAddForm({ isModerator }: { isModerator: boolean }) {
                 <div className="rounded overflow-y-auto h-100 container-type-sm-size" style={{ clipPath: "content-box" }}>
                     {ownedRoomsError != null && <div className="text-danger text-center">Failed to fetch rooms</div>}
                     {loadingOwnedRooms && (
-                        <div className="w-100 text-center mt-3">
+                        <div className="w-100 text-center my-3">
                             <div className="spinner-border text-primary" role="status">
                                 <span className="visually-hidden">Loading...</span>
                             </div>
