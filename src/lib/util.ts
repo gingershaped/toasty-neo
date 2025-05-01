@@ -1,4 +1,4 @@
-import { Host } from "@prisma/client";
+import { Host } from "@/lib/generated/prisma/client";
 import { z } from "zod";
 
 export function parseFormData<T extends z.ZodTypeAny>(form: FormData, schema: T): z.SafeParseReturnType<z.input<T>, z.output<T>>  {

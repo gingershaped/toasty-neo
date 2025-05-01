@@ -3,7 +3,7 @@
 import { useActionState, useMemo, useState } from "react";
 import { RoomEditForm } from "../../_components/RoomEditForm";
 import { modifyRoom, fetchOwnedRooms } from "../../actions";
-import { Host } from "@prisma/client";
+import { Host } from "@/lib/generated/prisma/client";
 import useSWR from "swr";
 import { LoadingButton } from "@/app/_components/LoadingButton";
 

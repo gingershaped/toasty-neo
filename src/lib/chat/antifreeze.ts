@@ -1,4 +1,4 @@
-import { AntifreezeResult, Host } from "@prisma/client";
+import { AntifreezeResult, Host } from "@/lib/generated/prisma/client";
 import { logger as rootLogger } from "../logger";
 import { Credentials } from "./credentials";
 import parse from "node-html-parser";

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useSelectedLayoutSegment } from "next/navigation";
-import { User } from "@prisma/client";
+import { User } from "@/lib/generated/prisma/client";
 import { UserLink } from "../_components/UserLink";
 import { LoadingLink } from "../_components/LoadingButton";
 

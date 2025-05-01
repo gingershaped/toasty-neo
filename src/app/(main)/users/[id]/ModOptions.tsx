@@ -1,7 +1,7 @@
 "use client";
 
 import { LoadingButton } from "@/app/_components/LoadingButton";
-import { User } from "@prisma/client";
+import { User } from "@/lib/generated/prisma/client";
 import { useActionState } from "react";
 import { updateModOptions } from "./actions";
 

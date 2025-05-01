@@ -1,6 +1,6 @@
 "use client";
 
-import { Room } from "@prisma/client";
+import { Room } from "@/lib/generated/prisma/client";
 import { RoomEditForm } from "../../../_components/RoomEditForm";
 import { checkRoom, deleteRoom, modifyRoom } from "@/app/(main)/rooms/actions";
 import { useActionState } from "react";

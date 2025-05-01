@@ -1,4 +1,4 @@
-import type { Host, Role } from "@prisma/client";
+import type { Host, Role } from "@/lib/generated/prisma/client";
 import { z } from "zod";
 
 export const hostSchema = z.enum<string, [Host, ...Host[]]>(["SO", "SE", "MSE"]);

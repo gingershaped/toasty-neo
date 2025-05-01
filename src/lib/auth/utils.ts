@@ -1,4 +1,4 @@
-import { User } from "@prisma/client";
+import { User } from "@/lib/generated/prisma/client";
 
 export function userCanModerate(user: User) {
     return userCanEdit(user) && ["MODERATOR", "DEVELOPER"].includes(user.role);

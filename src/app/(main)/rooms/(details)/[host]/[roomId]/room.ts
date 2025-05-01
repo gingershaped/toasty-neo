@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/globals";
 import { hostSchema } from "@/lib/schema";
-import { Host, Prisma } from "@prisma/client";
+import { Host, Prisma } from "@/lib/generated/prisma/client";
 import { notFound } from "next/navigation";
 import { cache } from "react";
 

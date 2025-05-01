@@ -6,7 +6,7 @@ import { credentialsForHost, fetchRoomName, fetchUserOwnedRooms } from "@/lib/ch
 import { prisma } from "@/lib/globals";
 import { hostSchema } from "@/lib/schema";
 import { parseFormData } from "@/lib/util";
-import { Host, Role, RoomState } from "@prisma/client";
+import { Host, Role, RoomState } from "@/lib/generated/prisma/client";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { flash } from "../../../lib/flash";

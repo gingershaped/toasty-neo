@@ -1,4 +1,4 @@
-import { Role, User } from "@prisma/client";
+import { Role, User } from "@/lib/generated/prisma/client";
 import Link, { LinkProps } from "next/link";
 import { AnchorHTMLAttributes } from "react";
 

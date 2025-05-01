@@ -1,6 +1,6 @@
 "use client";
 
-import { AntifreezeResult, AntifreezeRun, Host } from "@prisma/client";
+import { AntifreezeResult, AntifreezeRun, Host } from "@/lib/generated/prisma/client";
 import dayjs from "dayjs";
 import { useCallback, useState } from "react";
 import { fetchRuns } from "./actions";

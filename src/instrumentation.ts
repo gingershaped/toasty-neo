@@ -2,7 +2,7 @@ import type { Site } from "./lib/se";
 import type { Globals } from "./lib/globals";
 
 async function registerGlobals() {
-    const { PrismaClient } = await import("@prisma/client");
+    const { PrismaClient } = await import("./lib/generated/prisma/client");
     const { siteSchema } = await import("./lib/se");
     const { environ } = await import("./lib/environ");
 

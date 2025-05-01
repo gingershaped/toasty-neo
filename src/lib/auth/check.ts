@@ -1,4 +1,4 @@
-import { User } from "@prisma/client";
+import { User } from "@/lib/generated/prisma/client";
 import { redirect } from "next/navigation";
 
 export async function checkPermissions(user: User) {

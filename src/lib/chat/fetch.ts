@@ -1,4 +1,4 @@
-import { Host } from "@prisma/client";
+import { Host } from "@/lib/generated/prisma/client";
 import parse from "node-html-parser";
 import { Credentials } from "./credentials";
 import { environ } from "../environ";

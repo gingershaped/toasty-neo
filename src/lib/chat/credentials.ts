@@ -1,4 +1,4 @@
-import { Host } from "@prisma/client";
+import { Host } from "@/lib/generated/prisma/client";
 import { Cookie, CookieJar } from "tough-cookie";
 import { logger } from "../logger";
 import got from "got";
