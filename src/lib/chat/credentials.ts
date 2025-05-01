@@ -1,5 +1,3 @@
-"use server";
-
 import { Host } from "@prisma/client";
 import { Cookie, CookieJar } from "tough-cookie";
 import { logger } from "../logger";

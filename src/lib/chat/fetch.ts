@@ -1,5 +1,3 @@
-"use server";
-
 import { Host } from "@prisma/client";
 import parse from "node-html-parser";
 import { Credentials } from "./credentials";
