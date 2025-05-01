@@ -18,10 +18,10 @@ const compat = new FlatCompat({
 const config = [
     ...compat.extends("eslint:recommended", "plugin:@typescript-eslint/recommended", "next", "next/core-web-vitals", "prettier"),
     {
-        ignores: ["*.cjs"],
+        ignores: ["*.cjs", "src/lib/generated/", ".next/"],
     },
     {
-        files: ["**/*.ts", "**/*.tsx"],        
+        files: ["src/**/*.ts", "src/**/*.tsx"],        
         plugins: {
             "@typescript-eslint": typescriptEslint,
             "@stylistic": stylistic,
