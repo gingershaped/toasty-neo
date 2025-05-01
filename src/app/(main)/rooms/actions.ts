@@ -2,7 +2,7 @@
 
 import { readUserSession } from "@/lib/auth/session";
 import { userCanEdit, userCanModerate } from "@/lib/auth/utils";
-import { fetchRoomName, fetchUserOwnedRooms } from "@/lib/chat/util";
+import { credentialsForHost, fetchRoomName, fetchUserOwnedRooms } from "@/lib/chat/util";
 import { prisma } from "@/lib/globals";
 import { hostSchema } from "@/lib/schema";
 import { parseFormData } from "@/lib/util";
@@ -10,7 +10,7 @@ import { Host, Role, RoomState } from "@prisma/client";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { flash } from "../../../lib/flash";
-import { credentialsForHost, environ } from "@/lib/environ";
+import { environ } from "@/lib/environ";
 import { antifreeze, saveAntifreezeResult } from "@/lib/chat/antifreeze";
 
 const modifyRoomSchema = z.object({
