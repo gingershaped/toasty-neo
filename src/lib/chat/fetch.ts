@@ -1,8 +1,10 @@
+"use server";
+
 import { Host } from "@prisma/client";
 import parse from "node-html-parser";
 import { Credentials } from "./credentials";
 import { environ } from "../environ";
-import { HOST_ADDRESSES } from "./util";
+import { HOST_ADDRESSES } from "../util";
 
 export async function fetchChatId(host: Host, networkId: number) {
     return parseInt(new URL((await fetch(new URL(`/accounts/${networkId}`, HOST_ADDRESSES[host]))).url).pathname.split("/")[2]);

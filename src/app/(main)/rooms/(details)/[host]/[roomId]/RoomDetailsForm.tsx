@@ -6,7 +6,7 @@ import { checkRoom, deleteRoom, modifyRoom } from "@/app/(main)/rooms/actions";
 import { useActionState } from "react";
 import { LoadingButton } from "@/app/_components/LoadingButton";
 import Link from "next/link";
-import { HOST_ADDRESSES } from "@/lib/chat/util";
+import { HOST_ADDRESSES } from "@/lib/util";
 
 export default function RoomDetailsForm({ room, canEdit, isModerator, isDeveloper }: { room: Room, canEdit: boolean, isModerator: boolean, isDeveloper: boolean }) {
     const [{ errors: formErrors }, editAction, editing] = useActionState<{ errors: string[] }, FormData>(

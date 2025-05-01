@@ -1,3 +1,5 @@
+"use server";
+
 import { Host } from "@prisma/client";
 import { Cookie, CookieJar } from "tough-cookie";
 import { logger } from "../logger";
@@ -7,7 +9,7 @@ import { open } from "fs/promises";
 import { PathLike } from "fs";
 import { z } from "zod";
 import { hostSchema } from "../schema";
-import { HOST_ADDRESSES } from "./util";
+import { HOST_ADDRESSES } from "../util";
 
 const USER_AGENT = "Mozilla/5.0 (compatible; toasty/1;)";
 

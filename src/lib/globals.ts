@@ -3,8 +3,7 @@
 // defined in the global scope in Node.js and not in the browser.
 
 import { PrismaClient } from '@prisma/client';
-import { environ } from './environ';
-import { Site, siteSchema } from './se';
+import { Site } from './se';
 
 export type Globals = {
     prisma: PrismaClient,

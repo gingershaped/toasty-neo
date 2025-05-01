@@ -1,6 +1,4 @@
-import { Host } from "@prisma/client";
 import { z } from "zod";
-import { Credentials } from "./chat/credentials";
 
 const environSchema = z.object({
     DATABASE_URL: z.string().url(),

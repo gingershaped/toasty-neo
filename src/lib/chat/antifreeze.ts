@@ -1,3 +1,5 @@
+"use server";
+
 import { AntifreezeResult, Host } from "@prisma/client";
 import { logger as rootLogger } from "../logger";
 import { Credentials } from "./credentials";
