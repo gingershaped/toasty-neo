@@ -16,7 +16,7 @@ const compat = new FlatCompat({
 });
 
 const config = [
-    ...compat.extends("eslint:recommended", "plugin:@typescript-eslint/recommended", "next", "next/core-web-vitals"),
+    ...compat.extends("eslint:recommended", "plugin:@typescript-eslint/recommended", "next", "next/core-web-vitals", "prettier"),
     {
         ignores: ["*.cjs"],
     },

@@ -51,7 +51,7 @@ export class Credentials {
         return jar;
     }
 
-    client() {
+    client() {     
         return got.extend({
             cookieJar: this.cookieJar(),
             prefixUrl: HOSTS[this.host],

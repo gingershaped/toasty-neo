@@ -1,12 +1,12 @@
 import { AntifreezeResult, Host } from "@prisma/client";
 import { logger as rootLogger } from "../logger";
 import { Credentials } from "./credentials";
-import { Got } from "got";
 import parse from "node-html-parser";
-import { roomName as fetchRoomName } from "./util";
+import { fetchRoomName, credentialsForHost } from "./util";
 import { prisma } from "../globals";
-import { credentialsForHost, environ } from "../environ";
+import { environ } from "../environ";
 import dayjs from "dayjs";
+import { Got } from "got";
 
 const logger = rootLogger.child({ module: "antifreeze" });
 

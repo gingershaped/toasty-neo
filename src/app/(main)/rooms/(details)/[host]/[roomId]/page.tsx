@@ -6,13 +6,13 @@ import { TIME_FORMAT } from "@/lib/util";
 import dayjs from "dayjs";
 import { readUserSession } from "@/lib/auth/session";
 import RoomDetailsForm from "./RoomDetailsForm";
-import { userOwnedRooms } from "@/lib/chat/util";
+import { fetchUserOwnedRooms } from "@/lib/chat/util";
 import { userCanEdit, userCanModerate } from "@/lib/auth/utils";
 
 export default async function RoomDetails({ params }: { params: RoomParams }) {
     const user = await readUserSession();
     const room = await getRoom(params, { jobCreator: true, runs: true });
-    const editable = user != null && userCanEdit(user) && ((await userOwnedRooms(room.host, user.networkId)).some(({ id }) => parseInt(id) == room.roomId) || userCanModerate(user));
+    const editable = user != null && userCanEdit(user) && ((await fetchUserOwnedRooms(room.host, user.networkId)).some(({ id }) => parseInt(id) == room.roomId) || userCanModerate(user));
     const lastAntifreeze = room.runs.findLast(({ result }) => result == "ANTIFREEZED")?.checkedAt;
     const lastChecked = room.runs.at(-1)?.checkedAt;
 

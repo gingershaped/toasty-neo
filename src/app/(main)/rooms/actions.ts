@@ -2,7 +2,7 @@
 
 import { readUserSession } from "@/lib/auth/session";
 import { userCanEdit, userCanModerate } from "@/lib/auth/utils";
-import { roomName, userOwnedRooms } from "@/lib/chat/util";
+import { fetchRoomName, fetchUserOwnedRooms } from "@/lib/chat/util";
 import { prisma } from "@/lib/globals";
 import { hostSchema } from "@/lib/schema";
 import { parseFormData } from "@/lib/util";
@@ -30,7 +30,7 @@ const deleteOrCheckRoomSchema = z.object({
 export async function fetchOwnedRooms(host: Host) {
     const user = await readUserSession() ?? redirect("/auth/login");
     const alreadyAddedRooms = new Set((await prisma.room.findMany({ where: { host, jobCreatorId: user.networkId } })).map(({ roomId }) => roomId));
-    return (await userOwnedRooms(host, user.networkId)).filter(({ id }) => !alreadyAddedRooms.has(parseInt(id)));
+    return (await fetchUserOwnedRooms(host, user.networkId)).filter(({ id }) => !alreadyAddedRooms.has(parseInt(id)));
 }
 
 export async function modifyRoom(form: FormData): Promise<{ errors: string[] }> {
@@ -41,7 +41,7 @@ export async function modifyRoom(form: FormData): Promise<{ errors: string[] }> 
             ([field, errors]) => errors.map((error) => `${field}: ${error}`),
         ) };
     }
-    const ownedRooms = (await userOwnedRooms(data.host, user.networkId)).map(({ id }) => parseInt(id));
+    const ownedRooms = (await fetchUserOwnedRooms(data.host, user.networkId)).map(({ id }) => parseInt(id));
     if ((data.roomId == "custom" || !ownedRooms.includes(data.roomId)) && !userCanModerate(user)) {
         return { errors: ["Insufficent permissions"] };
     }
@@ -49,7 +49,7 @@ export async function modifyRoom(form: FormData): Promise<{ errors: string[] }> 
         return { errors: ["Insufficent permissions"] };
     }
     const roomId = data.roomId == "custom" ? data.customRoomId! : data.roomId;
-    const name = await roomName(data.host, roomId);
+    const name = await fetchRoomName(data.host, roomId);
     if (name == null) {
         return { errors: ["Room does not exist"] };
     }
@@ -92,7 +92,7 @@ export async function deleteRoom(form: FormData) {
     if (!success) {
         return false;
     }
-    const ownedRooms = (await userOwnedRooms(data.host, user.networkId)).map(({ id }) => parseInt(id));
+    const ownedRooms = (await fetchUserOwnedRooms(data.host, user.networkId)).map(({ id }) => parseInt(id));
     if (!ownedRooms.includes(data.roomId) && !userCanModerate(user)) {
         return false;
     }

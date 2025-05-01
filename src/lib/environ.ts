@@ -16,12 +16,3 @@ const environSchema = z.object({
 });
 
 export const environ = environSchema.parse(process.env);
-
-export async function credentialsForHost(host: Host) {
-    return await Credentials.loadOrAuthenticate(
-        `credentials-${host}.credentials`,
-        environ.SE_EMAIL,
-        environ.SE_PASSWORD,
-        host,
-    );
-}

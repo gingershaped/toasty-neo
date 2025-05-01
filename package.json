@@ -13,7 +13,8 @@
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
     "dayjs": "^1.11.13",
-    "got": "^14.4.5",
+    "fetch-cookie": "^3.1.0",
+    "got": "^14.4.7",
     "jose": "^5.9.6",
     "next": "^15.1.2",
     "node-html-parser": "^6.1.13",
@@ -36,6 +37,7 @@
     "@typescript-eslint/eslint-plugin": "^8.15.0",
     "eslint": "^9.15.0",
     "eslint-config-next": "15.0.3",
+    "eslint-config-prettier": "^10.1.2",
     "prisma": "^6.7.0",
     "sass": "^1.81.0",
     "typescript": "^5"
