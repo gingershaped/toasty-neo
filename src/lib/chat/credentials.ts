@@ -3,11 +3,11 @@ import { Cookie, CookieJar } from "tough-cookie";
 import { logger } from "../logger";
 import got from "got";
 import parse from "node-html-parser";
-import { HOSTS } from "./util";
 import { open } from "fs/promises";
 import { PathLike } from "fs";
 import { z } from "zod";
 import { hostSchema } from "../schema";
+import { HOST_ADDRESSES } from "./util";
 
 const USER_AGENT = "Mozilla/5.0 (compatible; toasty/1;)";
 
@@ -47,14 +47,14 @@ export class Credentials {
         const cookieRoot = this.host == "SO" ? "https://stackoverflow.com" : "https://stackexchange.com";
         jar.setCookieSync(this.acct, cookieRoot);
         jar.setCookieSync(this.prov, cookieRoot);
-        jar.setCookieSync(this.chatusr, HOSTS[this.host].toString());
+        jar.setCookieSync(this.chatusr, HOST_ADDRESSES[this.host].toString());
         return jar;
     }
 
     client() {     
         return got.extend({
             cookieJar: this.cookieJar(),
-            prefixUrl: HOSTS[this.host],
+            prefixUrl: HOST_ADDRESSES[this.host],
             headers: {
                 "User-Agent": USER_AGENT,
             },
@@ -116,17 +116,17 @@ export class Credentials {
         chatCookieJar.setCookieSync(prov, cookieRoot);
         const chatClient = got.extend({
             cookieJar: chatCookieJar,
-            prefixUrl: HOSTS[host],
+            prefixUrl: HOST_ADDRESSES[host],
             headers: {
                 "User-Agent": USER_AGENT,
             },
         });
         const chatIndexResponse = await chatClient.get("");
-        const chatusr = chatCookieJar.getCookiesSync(HOSTS[host].toString()).find(({ key }) => key == chatUserCookie);
+        const chatusr = chatCookieJar.getCookiesSync(HOST_ADDRESSES[host].toString()).find(({ key }) => key == chatUserCookie);
         if (chatusr == undefined) {
-            throw new Error(`Login failed! ${chatUserCookie} not in cookies returned from ${HOSTS[host]}`);
+            throw new Error(`Login failed! ${chatUserCookie} not in cookies returned from ${HOST_ADDRESSES[host]}`);
         }
-        const profileLink = new URL(parse(chatIndexResponse.body).querySelector(".topbar-menu-links a")!.getAttribute("href")!, HOSTS[host]);
+        const profileLink = new URL(parse(chatIndexResponse.body).querySelector(".topbar-menu-links a")!.getAttribute("href")!, HOST_ADDRESSES[host]);
         if (profileLink.host == "stackexchange.com") {
             throw new Error("The supplied credentials were not accepted by chat! Bad username or password?");
         }
@@ -162,7 +162,7 @@ export class Credentials {
             await file.close();
         }
         const chatIndexResponse = await credentials.client().get("");
-        const profileLink = new URL(parse(chatIndexResponse.body).querySelector(".topbar-menu-links a")!.getAttribute("href")!, HOSTS[credentials.host]);
+        const profileLink = new URL(parse(chatIndexResponse.body).querySelector(".topbar-menu-links a")!.getAttribute("href")!, HOST_ADDRESSES[credentials.host]);
         if (profileLink.host == "stackexchange.com") {
             this.logger.info(`Credentials in ${path} are expired!`);
             return null;

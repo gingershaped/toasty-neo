@@ -2,7 +2,7 @@
 
 import { readUserSession } from "@/lib/auth/session";
 import { userCanEdit, userCanModerate } from "@/lib/auth/utils";
-import { credentialsForHost, fetchRoomName, fetchUserOwnedRooms } from "@/lib/chat/util";
+import { credentialsForHost, fetchRoomName, fetchUserOwnedRooms } from "@/lib/chat/fetch";
 import { prisma } from "@/lib/globals";
 import { hostSchema } from "@/lib/schema";
 import { parseFormData } from "@/lib/util";

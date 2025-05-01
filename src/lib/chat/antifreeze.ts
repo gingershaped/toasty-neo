@@ -2,7 +2,7 @@ import { AntifreezeResult, Host } from "@prisma/client";
 import { logger as rootLogger } from "../logger";
 import { Credentials } from "./credentials";
 import parse from "node-html-parser";
-import { fetchRoomName, credentialsForHost } from "./util";
+import { fetchRoomName, credentialsForHost } from "./fetch";
 import { prisma } from "../globals";
 import { environ } from "../environ";
 import dayjs from "dayjs";
