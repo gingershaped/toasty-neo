@@ -48,7 +48,7 @@ type LoadingSubmitButtonProps = {
 export function LoadingSubmitButton({ variant, className, type, formAction, disabled: forceDisabled, children }: LoadingSubmitButtonProps) {
     const { pending, action } = useFormStatus();
     const loading = pending && action === formAction;
-    const disabled = loading || forceDisabled;
+    const disabled = pending || forceDisabled;
     return <button className={`btn btn-${variant} position-relative ${className ?? ""}`} disabled={disabled} type={type ?? "submit"} formAction={formAction}>
         <LoadingContent loading={loading}>{children}</LoadingContent>
     </button>;
