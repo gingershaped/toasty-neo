@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { MouseEventHandler, ReactNode, useState } from "react";
 
 type LoadingContentProps = {
@@ -49,14 +48,13 @@ export function LoadingLink({ href, variant, className, children }: LoadingLinkP
     const [loading, setLoading] = useState<boolean>(false);
 
     return (
-        <Link
+        <a
             href={href}
             className={`position-relative btn btn-${variant} ${className ?? ""} ${loading ? "disabled" : ""}`}
             role="button"
             onClick={() => setLoading(true)}
-            prefetch={false}
         >
             <LoadingContent loading={loading}>{children}</LoadingContent>
-        </Link>
+        </a>
     );
 }
