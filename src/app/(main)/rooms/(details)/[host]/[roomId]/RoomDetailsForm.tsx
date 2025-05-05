@@ -4,17 +4,16 @@ import { Room } from "@/lib/generated/prisma/client";
 import { RoomEditForm } from "../../../_components/RoomEditForm";
 import { checkRoom, deleteRoom, modifyRoom } from "@/app/(main)/rooms/actions";
 import { useActionState } from "react";
-import { LoadingButton } from "@/app/_components/LoadingButton";
+import { LoadingSubmitButton } from "@/app/_components/LoadingButton";
 import Link from "next/link";
 import { HOST_ADDRESSES } from "@/lib/util";
 
 export default function RoomDetailsForm({ room, canEdit, isModerator, isDeveloper }: { room: Room, canEdit: boolean, isModerator: boolean, isDeveloper: boolean }) {
-    const [{ errors: formErrors }, editAction, editing] = useActionState<{ errors: string[] }, FormData>(
+    const [{ errors: formErrors }, editAction] = useActionState<{ errors: string[] }, FormData>(
         (_, form) => modifyRoom(form), { errors: [] },
     );
-    const [, deleteAction, deleting] = useActionState<unknown, FormData>((_, form) => deleteRoom(form), null);
-    const [, checkAction, checking] = useActionState<unknown, FormData>((_, form) => checkRoom(form), null);
-    const busy = editing || deleting || checking;
+    const [, deleteAction] = useActionState<unknown, FormData>((_, form) => deleteRoom(form), null);
+    const [, checkAction] = useActionState<unknown, FormData>((_, form) => checkRoom(form), null);
 
     return <form>
         <input type="hidden" name="host" value={room.host} />
@@ -31,30 +30,21 @@ export default function RoomDetailsForm({ room, canEdit, isModerator, isDevelope
             <div className="d-flex gap-2">
                 <Link className="me-auto" href={new URL(`/rooms/info/${room.roomId}`, HOST_ADDRESSES[room.host])} target="_blank">view in chat</Link>
                 {isDeveloper && (
-                    <LoadingButton
-                        type="submit"
+                    <LoadingSubmitButton
                         variant="secondary"
-                        loading={checking}
-                        disabled={busy}
                         formAction={checkAction}
                     >
                         Check now
-                    </LoadingButton>
+                    </LoadingSubmitButton>
                 )}
-                <LoadingButton
-                    type="submit"
+                <LoadingSubmitButton
                     variant="danger"
-                    loading={deleting}
-                    disabled={busy}
                     formAction={deleteAction}
-                >Delete room</LoadingButton>
-                <LoadingButton
-                    type="submit"
+                >Delete room</LoadingSubmitButton>
+                <LoadingSubmitButton
                     variant="primary"
-                    loading={editing}
-                    disabled={busy}
                     formAction={editAction}
-                >Save changes</LoadingButton>
+                >Save changes</LoadingSubmitButton>
                 {formErrors.map((error, index) => <div key={index} className="text-danger">{error}</div>)}
             </div>
         </>}

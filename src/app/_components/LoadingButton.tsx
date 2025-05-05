@@ -1,6 +1,7 @@
 "use client";
 
 import { MouseEventHandler, ReactNode, useState } from "react";
+import { useFormStatus } from "react-dom";
 
 type LoadingContentProps = {
     loading: boolean,
@@ -26,13 +27,29 @@ type LoadingButtonProps = {
     disabled?: boolean,
     className?: string,
     onClick?: MouseEventHandler<HTMLButtonElement>,
-    type?: "submit" | "reset" | "button",
-    formAction?: ((formData: FormData) => void | Promise<void>),
     children: ReactNode,
 };
 
-export function LoadingButton({ loading, variant, disabled, className, onClick, type, children, formAction }: LoadingButtonProps) {
-    return <button className={`btn btn-${variant} position-relative ${className ?? ""}`} disabled={(disabled ?? false) || loading} onClick={onClick} type={type} formAction={formAction}>
+export function LoadingButton({ loading, variant, disabled, className, onClick, children }: LoadingButtonProps) {
+    return <button className={`btn btn-${variant} position-relative ${className ?? ""}`} disabled={(disabled ?? false) || loading} onClick={onClick}>
+        <LoadingContent loading={loading}>{children}</LoadingContent>
+    </button>;
+}
+
+type LoadingSubmitButtonProps = {
+    variant: string,
+    className?: string,
+    type?: "submit" | "reset",
+    formAction?: ((formData: FormData) => void | Promise<void>),
+    disabled?: boolean,
+    children: ReactNode,
+};
+
+export function LoadingSubmitButton({ variant, className, type, formAction, disabled: forceDisabled, children }: LoadingSubmitButtonProps) {
+    const { pending, action } = useFormStatus();
+    const loading = pending && action === formAction;
+    const disabled = loading || forceDisabled;
+    return <button className={`btn btn-${variant} position-relative ${className ?? ""}`} disabled={disabled} type={type ?? "submit"} formAction={formAction}>
         <LoadingContent loading={loading}>{children}</LoadingContent>
     </button>;
 }

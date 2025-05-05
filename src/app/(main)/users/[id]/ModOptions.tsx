@@ -1,14 +1,14 @@
 "use client";
 
-import { LoadingButton } from "@/app/_components/LoadingButton";
+import { LoadingSubmitButton } from "@/app/_components/LoadingButton";
 import { User } from "@/lib/generated/prisma/client";
 import { useActionState } from "react";
 import { updateModOptions } from "./actions";
 
 export function ModOptions({ targetUser, canChangeRole }: { targetUser: User, canChangeRole: boolean }) {
-    const [, editAction, editing] = useActionState<unknown, FormData>((_, form) => updateModOptions(form), null);
+    const [, editAction] = useActionState<unknown, FormData>((_, form) => updateModOptions(form), null);
     
-    return <form className="border border-danger rounded p-2" action={editAction}>
+    return <form className="border border-danger rounded p-2">
         <h5>Moderator options</h5>
         <input type="hidden" name="networkId" value={targetUser.networkId} />
         <div className="form-check form-switch">
@@ -25,11 +25,10 @@ export function ModOptions({ targetUser, canChangeRole }: { targetUser: User, ca
             </select>
         </div>}
         <div className="d-flex justify-content-end gap-2">
-            <LoadingButton
-                type="submit"
+            <LoadingSubmitButton
                 variant="danger"
-                loading={editing}
-            >Save changes</LoadingButton>
+                formAction={editAction}
+            >Save changes</LoadingSubmitButton>
         </div>
     </form>;
 }

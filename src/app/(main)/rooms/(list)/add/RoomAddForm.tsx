@@ -5,7 +5,7 @@ import { RoomEditForm } from "../../_components/RoomEditForm";
 import { modifyRoom, fetchOwnedRooms } from "../../actions";
 import { Host } from "@/lib/generated/prisma/client";
 import useSWR from "swr";
-import { LoadingButton } from "@/app/_components/LoadingButton";
+import { LoadingSubmitButton } from "@/app/_components/LoadingButton";
 
 export function RoomAddForm({ isModerator }: { isModerator: boolean }) {
     const [host, setHost] = useState<Host>(Host.SE);
@@ -13,11 +13,11 @@ export function RoomAddForm({ isModerator }: { isModerator: boolean }) {
     const { data: ownedRooms, error: ownedRoomsError, isLoading: loadingOwnedRooms } = useSWR(host, fetchOwnedRooms);
 
     const filteredRooms = useMemo(() => ownedRooms?.filter(({ name }) => searchQuery.length == 0 || name.toLowerCase().includes(searchQuery)), [ownedRooms, searchQuery]);
-    const [{ errors: formErrors }, action, submitting] = useActionState<{ errors: string[] }, FormData>(
+    const [{ errors: formErrors }, action] = useActionState<{ errors: string[] }, FormData>(
         (_, form) => modifyRoom(form), { errors: [] },
     );
     
-    return <form className="row" action={action}>
+    return <form className="row" >
         <div className="col-sm-5 vstack mb-3 mb-sm-0">
             <select className="form-select mb-2" name="host" onChange={(e) => setHost(e.target.value as Host)}>
                 <option value={Host.SE}>Stack Exchange</option>
@@ -64,13 +64,12 @@ export function RoomAddForm({ isModerator }: { isModerator: boolean }) {
         <div className="col-sm-7">
             <RoomEditForm isModerator={isModerator} />
             <hr className="my-3" />
-            <LoadingButton
-                type="submit"
+            <LoadingSubmitButton
                 variant="primary"
                 className="align-self-sm-end"
-                loading={submitting}
                 disabled={loadingOwnedRooms}
-            >Add room</LoadingButton>
+                formAction={action}
+            >Add room</LoadingSubmitButton>
             {formErrors.map((error, index) => <div key={index} className="text-danger">{error}</div>)}
         </div>
     </form>;

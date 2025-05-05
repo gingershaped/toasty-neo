@@ -1,13 +1,13 @@
 "use client";
 
-import { LoadingButton } from "@/app/_components/LoadingButton";
+import { LoadingSubmitButton } from "@/app/_components/LoadingButton";
 import { updateDetails } from "./actions";
 import { useActionState } from "react";
 
 export function UpdateDetailsForm({ associated }: { associated: { site_name: string, site_url: string }[] }) {
-    const [, action, submitting] = useActionState<unknown, FormData>((_, form) => updateDetails(form), null);
+    const [, action] = useActionState<unknown, FormData>((_, form) => updateDetails(form), null);
 
-    return <form action={action}>
+    return <form>
         <div className="mb-3">
             <label className="form-label" htmlFor="site">Which site would you like to copy your details from?</label>
             <select className="form-select" name="site">
@@ -17,11 +17,10 @@ export function UpdateDetailsForm({ associated }: { associated: { site_name: str
             </select>
         </div>
         <div className="d-flex justify-content-end gap-2">
-            <LoadingButton
-                type="submit"
+            <LoadingSubmitButton
                 variant="primary"
-                loading={submitting}
-            >Update details</LoadingButton>
+                formAction={action}
+            >Update details</LoadingSubmitButton>
         </div>
     </form>;
 }
