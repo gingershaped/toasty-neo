@@ -1,11 +1,11 @@
-import { prisma } from "@/lib/globals";
+import { g } from "@/lib/globals";
 import { readUserSession } from "../../lib/auth/session";
 import Link from "next/link";
 import { LoadingLink } from "../_components/LoadingButton";
 
 export default async function Index() {
     const user = await readUserSession();
-    const roomCount = await prisma.room.count();
+    const roomCount = await g.prisma.room.count();
     return <div className="row justify-content-center">
         <div className="col-sm-7">
             <section className="w-100 bg-body-tertiary rounded p-3">

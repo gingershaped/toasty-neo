@@ -1,7 +1,7 @@
 "use server";
 import { createSessionCookie } from "@/lib/auth/cookie";
 import { SessionPayload, SESSION_COOKIE, SESSION_COOKIE_MAX_AGE, UpdateDetailsPayload, UPDATE_DETAILS_COOKIE, UPDATE_DETAILS_MAX_AGE } from "@/lib/auth/session";
-import { prisma } from "@/lib/globals";
+import { g } from "@/lib/globals";
 import { Role } from "@/lib/generated/prisma/client";
 import { redirect } from "next/navigation";
 import { fetchToken, fetchAccountDetails } from "../../actions";
@@ -23,7 +23,7 @@ export async function finalizeLogin(code: string | null, state: string | null, e
     }
     const { associated, primaryAccount, hasSufficientReputation, isModerator } = await fetchAccountDetails(token);
     const newRole = hasSufficientReputation ? (isModerator ? Role.MODERATOR : Role.USER) : Role.UNVERIFIED;
-    let user = await prisma.user.upsert({
+    let user = await g.prisma.user.upsert({
         create: {
             networkId: primaryAccount.account_id,
             username: primaryAccount.display_name,
@@ -36,7 +36,7 @@ export async function finalizeLogin(code: string | null, state: string | null, e
         },
     });
     if (user.role != Role.DEVELOPER && user.role != newRole) {
-        user = await prisma.user.update({
+        user = await g.prisma.user.update({
             where: { networkId: user.networkId },
             data: { role: newRole },
         });

@@ -3,7 +3,7 @@
 import { environ } from "@/lib/environ";
 import { networkUserSchema, seRequest, siteUserSchema } from "@/lib/se";
 import { MINIMUM_REPUTATION } from "../../lib/auth/session";
-import { sites } from "@/lib/globals";
+import { g } from "@/lib/globals";
 
 type TokenReturn = { token: string, error: undefined, success: true } | { token: undefined, error: object, success: false };
 
@@ -27,7 +27,7 @@ export async function fetchAccountDetails(token: string) {
     const associated = await seRequest("/me/associated?types=main_site&filter=!--43sh-c)9wP", networkUserSchema, token);
     const hasSufficientReputation = associated.some((user) => user.reputation >= MINIMUM_REPUTATION);
     const isModerator = associated.some((user) => user.user_type == "moderator");
-    const primarySite = (await sites).get(associated.sort((a, b) => a.reputation - b.reputation).reverse()[0].site_url)!.api_site_parameter;
+    const primarySite = (await g.sites).get(associated.sort((a, b) => a.reputation - b.reputation).reverse()[0].site_url)!.api_site_parameter;
     const primaryAccount = (await seRequest(`/me?site=${primarySite}`, siteUserSchema, token))[0];
 
     return { associated, primaryAccount, hasSufficientReputation, isModerator };

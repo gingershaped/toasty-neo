@@ -3,7 +3,7 @@
 import { readSessionCookie } from "@/lib/auth/cookie";
 import { readUserSession, UPDATE_DETAILS_COOKIE, updateDetailsPayload } from "@/lib/auth/session";
 import { flash } from "@/lib/flash";
-import { prisma, sites } from "@/lib/globals";
+import { g } from "@/lib/globals";
 import { seRequest, siteUserSchema } from "@/lib/se";
 import { parseFormData } from "@/lib/util";
 import { cookies } from "next/headers";
@@ -29,10 +29,10 @@ export async function updateDetails(form: FormData) {
     if (!associated.some(({ site_url: siteURL }) => siteURL == data.site)) {
         return;
     }
-    const site = (await sites).get(data.site)!.api_site_parameter;
+    const site = (await g.sites).get(data.site)!.api_site_parameter;
     const profile = (await seRequest(`/me?site=${site}`, siteUserSchema, token))[0];
     
-    await prisma.user.update({
+    await g.prisma.user.update({
         where: { networkId: user.networkId },
         data: {
             username: profile.display_name,

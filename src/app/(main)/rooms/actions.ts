@@ -3,7 +3,7 @@
 import { readUserSession } from "@/lib/auth/session";
 import { userCanEdit, userCanModerate } from "@/lib/auth/utils";
 import { credentialsForHost, fetchRoomName, fetchUserOwnedRooms } from "@/lib/chat/fetch";
-import { prisma } from "@/lib/globals";
+import { g } from "@/lib/globals";
 import { hostSchema } from "@/lib/schema";
 import { parseFormData } from "@/lib/util";
 import { Host, Role, RoomState } from "@/lib/generated/prisma/client";
@@ -29,7 +29,7 @@ const deleteOrCheckRoomSchema = z.object({
 
 export async function fetchOwnedRooms(host: Host) {
     const user = await readUserSession() ?? redirect("/auth/login");
-    const alreadyAddedRooms = new Set((await prisma.room.findMany({ where: { host, jobCreatorId: user.networkId } })).map(({ roomId }) => roomId));
+    const alreadyAddedRooms = new Set((await g.prisma.room.findMany({ where: { host, jobCreatorId: user.networkId } })).map(({ roomId }) => roomId));
     return (await fetchUserOwnedRooms(host, user.networkId)).filter(({ id }) => !alreadyAddedRooms.has(parseInt(id)));
 }
 
@@ -59,7 +59,7 @@ export async function modifyRoom(form: FormData): Promise<{ errors: string[] }> 
         locked: userCanModerate(user) ? data.locked: undefined,
         state: data.active ? "ACTIVE": "PAUSED" as RoomState,
     };
-    const room = await prisma.room.upsert({
+    const room = await g.prisma.room.upsert({
         where: {
             // eslint-disable-next-line camelcase
             roomId_host: {
@@ -99,7 +99,7 @@ export async function deleteRoom(form: FormData) {
     if (!userCanEdit(user)) {
         return false;
     }
-    await prisma.room.delete({
+    await g.prisma.room.delete({
         where: {
             // eslint-disable-next-line camelcase
             roomId_host: {...data},
@@ -130,7 +130,7 @@ export async function checkRoom(form: FormData) {
         return false;
     }
 
-    const room = await prisma.room.findUnique({
+    const room = await g.prisma.room.findUnique({
         where: {
             // eslint-disable-next-line camelcase
             roomId_host: data,

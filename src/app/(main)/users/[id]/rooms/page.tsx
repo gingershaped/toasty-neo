@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/globals";
+import { g } from "@/lib/globals";
 import { getUser, UserParams } from "../user";
 import { RoomList } from "@/app/(main)/rooms/_components/RoomList";
 import { readUserSession } from "@/lib/auth/session";
@@ -7,7 +7,7 @@ import Link from "next/link";
 export default async function UserRooms({ params }: { params: UserParams }) {
     const currentUser = await readUserSession();
     const targetUser = await getUser(params);
-    const rooms = await prisma.room.findMany({
+    const rooms = await g.prisma.room.findMany({
         where: { jobCreatorId: targetUser.networkId },
         include: { jobCreator: true },
         orderBy: { jobCreatedAt: "desc" },

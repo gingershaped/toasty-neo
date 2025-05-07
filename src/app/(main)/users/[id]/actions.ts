@@ -2,7 +2,7 @@
 
 import { readUserSession } from "@/lib/auth/session";
 import { userCanModerate } from "@/lib/auth/utils";
-import { prisma } from "@/lib/globals";
+import { g } from "@/lib/globals";
 import { roleSchema } from "@/lib/schema";
 import { parseFormData } from "@/lib/util";
 import { redirect } from "next/navigation";
@@ -26,11 +26,11 @@ export async function updateModOptions(form: FormData) {
     if (data.role != undefined && currentUser.role != "DEVELOPER") {
         return;
     }
-    const targetUser = await prisma.user.findUnique({ where: { networkId: data.networkId } });
+    const targetUser = await g.prisma.user.findUnique({ where: { networkId: data.networkId } });
     if (targetUser == null || (userCanModerate(targetUser) && currentUser.role != "DEVELOPER")) {
         return;
     }
-    await prisma.user.update({
+    await g.prisma.user.update({
         where: { networkId: data.networkId },
         data: {
             locked: data.locked,

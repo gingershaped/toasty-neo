@@ -3,7 +3,7 @@ import { logger as rootLogger } from "../logger";
 import { Credentials } from "./credentials";
 import parse from "node-html-parser";
 import { fetchRoomName, credentialsForHost } from "./fetch";
-import { prisma } from "../globals";
+import { g } from "../globals";
 import { environ } from "../environ";
 import dayjs from "dayjs";
 import { Got } from "got";
@@ -87,7 +87,7 @@ export async function antifreeze(job: AntifreezeJob): Promise<AntifreezeJobResul
 }
 
 export async function saveAntifreezeResult(roomId: number, host: Host, result: AntifreezeJobResult) {
-    await prisma.antifreezeRun.create({
+    await g.prisma.antifreezeRun.create({
         data: {
             room: {
                 connect: {
@@ -102,7 +102,7 @@ export async function saveAntifreezeResult(roomId: number, host: Host, result: A
         },
     });
     if (result.result == "ERROR") {
-        await prisma.room.update({
+        await g.prisma.room.update({
             where: {
                 // eslint-disable-next-line camelcase
                 roomId_host: { roomId, host },
@@ -116,7 +116,7 @@ export async function saveAntifreezeResult(roomId: number, host: Host, result: A
 
 export async function scheduledAntifreeze() {
     logger.info("Starting scheduled antifreeze run");
-    const rooms = await prisma.room.findMany({
+    const rooms = await g.prisma.room.findMany({
         where: { state: "ACTIVE" },
     });
     logger.info(`${rooms.length} room(s) to antifreeze`);

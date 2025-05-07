@@ -10,7 +10,4 @@ export type Globals = {
     sites: Map<string, Site>,
 };
 
-const globals = global as unknown as Globals;
-
-export const prisma = globals.prisma;
-export const sites = globals.sites;
+export const g = global as unknown as Globals;

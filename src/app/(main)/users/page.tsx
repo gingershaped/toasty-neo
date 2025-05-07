@@ -1,11 +1,11 @@
 import { UserLink } from "@/app/_components/UserLink";
 import { readUserSession } from "@/lib/auth/session";
 import { userCanModerate } from "@/lib/auth/utils";
-import { prisma } from "@/lib/globals";
+import { g } from "@/lib/globals";
 
 export default async function UserList() {
     const currentUser = await readUserSession();
-    const users = await prisma.user.findMany({ orderBy: { joinedAt: "desc" } });
+    const users = await g.prisma.user.findMany({ orderBy: { joinedAt: "desc" } });
 
     return <div className="row justify-content-center">
         <div className="col-lg-10">

@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/globals";
+import { g } from "@/lib/globals";
 import { readSessionCookie } from "@/lib/auth/cookie";
 import { z } from "zod";
 
@@ -14,7 +14,7 @@ export async function readUserSession() {
     if (session == null) {
         return null;
     }
-    return await prisma.user.findUnique({ where: { networkId: session.id } });
+    return await g.prisma.user.findUnique({ where: { networkId: session.id } });
 }
 
 export const updateDetailsPayload = z.object({
