@@ -9,7 +9,7 @@ type RoomEntryProps = {
 };
 
 export function RoomEntry({ room }: RoomEntryProps) {
-    return <div className="list-group-item d-flex align-items-center">
+    return <div className="list-group-item d-flex align-items-sm-center flex-column flex-sm-row">
         <div className="me-auto d-block">
             <div>
                 <Link href={`/rooms/${room.host.toLowerCase()}/${room.roomId}`}>{room.name}</Link>
