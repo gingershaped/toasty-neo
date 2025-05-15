@@ -32,9 +32,11 @@ export default async function RoomDetails({ params }: { params: RoomParams }) {
             </div>
         </div>
         {(room.state == "ERRORED" && lastChecked != null) && (
-            <div className="alert alert-danger">
-                <b>Antifreezing is paused</b> because an error occured during the last antifreeze run on {dayjs(lastChecked).format(TIME_FORMAT)}.
-            </div>
+            <>
+                <div className="alert alert-danger">
+                    <b>Antifreezing is paused</b> because an error occured during the last antifreeze run on {dayjs(lastChecked).format(TIME_FORMAT)}.
+                </div>
+            </>
         )}
         <RoomDetailsForm room={room} canEdit={editable} isModerator={user != null && userCanModerate(user)} isDeveloper={user != null && user.role == "DEVELOPER"} />
     </div>;

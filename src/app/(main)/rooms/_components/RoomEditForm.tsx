@@ -1,20 +1,29 @@
+import { type Room } from "@/lib/generated/prisma";
+
 export type RoomEditFormProps = {
     isModerator: boolean,
-    message?: string,
-    run?: boolean,
-    locked?: boolean,
     readOnly?: boolean,
+    room?: Room,
 };
 
-export function RoomEditForm({ isModerator, message, run, locked, readOnly }: RoomEditFormProps) {
+export function RoomEditForm({ isModerator, readOnly, room }: RoomEditFormProps) {
     return <>
-        <div className="form-check form-switch mb-3">
-            <input className="form-check-input" type="checkbox" role="switch" id="run-antifreeze" name="active" defaultChecked={run ?? true} disabled={readOnly} />
-            <label className="form-check-label" htmlFor="run-antifreeze">Run antifreeze</label>
-        </div>
         <div className="mb-3">
             <label htmlFor="room-message" className="form-label">Antifreeze message to send</label>
-            <input type="text" className="form-control" id="room-message" name="message" maxLength={128} defaultValue={message ?? "---"} disabled={readOnly} />
+            <div className="btn-toolbar">
+                <div className="input-group me-2 flex-grow-1">
+                    <input type="text" className="form-control" id="room-message" name="message" maxLength={128} defaultValue={room?.antifreezeMessage ?? "---"} disabled={readOnly} />
+                </div>
+                {room && (
+                    <div className="btn-group" role="group" aria-label="Room state">
+                        <input type="radio" className="btn-check" name="state" value="active" id="room-state-active" defaultChecked={room.state === "ACTIVE"} />
+                        <label className="btn btn-outline-primary" htmlFor="room-state-active">Active</label>
+
+                        <input type="radio" className="btn-check" name="state" value="paused" id="room-state-paused" defaultChecked={room.state !== "ACTIVE"} />
+                        <label className={`btn btn-outline-${room.state === "ERRORED" ? "danger" : "secondary"} border-start-0`} htmlFor="room-state-paused">Paused</label>
+                    </div>
+                )}
+            </div>
             <div className="mt-3">
                 Available substitutions:
                 <ul className="my-1">
@@ -27,7 +36,7 @@ export function RoomEditForm({ isModerator, message, run, locked, readOnly }: Ro
             <div className="border border-danger rounded p-2">
                 <h5>Moderator options</h5>
                 <div className="form-check form-switch">
-                    <input className="form-check-input" type="checkbox" role="switch" id="locked" name="locked" defaultChecked={locked ?? false} disabled={readOnly} />
+                    <input className="form-check-input" type="checkbox" role="switch" id="locked" name="locked" defaultChecked={room?.locked ?? false} disabled={readOnly} />
                     <label className="form-check-label" htmlFor="locked">Locked</label>
                 </div>
             </div>

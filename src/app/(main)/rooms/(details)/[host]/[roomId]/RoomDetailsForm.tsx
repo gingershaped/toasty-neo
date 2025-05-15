@@ -21,9 +21,7 @@ export default function RoomDetailsForm({ room, canEdit, isModerator, isDevelope
         <RoomEditForm
             isModerator={isModerator}
             readOnly={!canEdit}
-            locked={room.locked}
-            message={room.antifreezeMessage}
-            run={room.state == "ACTIVE"}
+            room={room}
         />
         {canEdit && <>
             <hr />

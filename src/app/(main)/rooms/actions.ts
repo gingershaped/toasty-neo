@@ -16,8 +16,8 @@ import { antifreeze, saveAntifreezeResult } from "@/lib/chat/antifreeze";
 const modifyRoomSchema = z.object({
     host: hostSchema,
     message: z.string().min(3).max(128),
-    active: z.coerce.boolean(),
-    locked: z.coerce.boolean(),
+    state: z.enum(["active", "paused"]),
+    locked: z.coerce.boolean().optional(),
     roomId: z.union([z.coerce.number(), z.literal("custom")]),
     customRoomId: z.coerce.number().optional(),
 }).refine(({ roomId, customRoomId }) => roomId == "custom" ? customRoomId != undefined : true);
@@ -42,46 +42,68 @@ export async function modifyRoom(form: FormData): Promise<{ errors: string[] }> 
         ) };
     }
     const ownedRooms = (await fetchUserOwnedRooms(data.host, user.networkId)).map(({ id }) => parseInt(id));
-    if ((data.roomId == "custom" || !ownedRooms.includes(data.roomId)) && !userCanModerate(user)) {
-        return { errors: ["Insufficent permissions"] };
-    }
     if (!userCanEdit(user)) {
         return { errors: ["Insufficent permissions"] };
+    }
+    if (data.locked !== undefined && !userCanModerate(user)) {
+        return { errors: ["Insufficent permissions"] };
+    }
+    if ((data.roomId == "custom" || !ownedRooms.includes(data.roomId)) && !userCanModerate(user)) {
+        return { errors: ["You are not an owner of this room"] };
     }
     const roomId = data.roomId == "custom" ? data.customRoomId! : data.roomId;
     const name = await fetchRoomName(data.host, roomId);
     if (name == null) {
         return { errors: ["Room does not exist"] };
     }
-    const updatedData = {
-        name,
-        antifreezeMessage: data.message,
-        locked: userCanModerate(user) ? data.locked: undefined,
-        state: data.active ? "ACTIVE": "PAUSED" as RoomState,
-    };
-    const room = await g.prisma.room.upsert({
+    let room = await g.prisma.room.findUnique({
         where: {
             // eslint-disable-next-line camelcase
             roomId_host: {
-                host: data.host,
                 roomId,
-            },
-        },
-        create: {
-            ...updatedData,
-            host: data.host,
-            roomId,
-            jobCreator: { connect: { networkId: user.networkId } },
-        },
-        update: updatedData,
-        include: {
-            runs: {
-                take: 1,
+                host: data.host,
             },
         },
     });
-    if (room.runs.length == 0) {
+    if (room === null) {
+        room = await g.prisma.room.create({
+            data: {
+                roomId,
+                name,
+                host: data.host,
+                antifreezeMessage: data.message,
+                jobCreator: {
+                    connect: {
+                        networkId: user.networkId,
+                    },
+                },
+            },
+        });
         await antifreezeSingleRoom(room.roomId, room.host, room.antifreezeMessage);
+    } else {
+        let newState: RoomState;
+        if (data.state === "active") {
+            newState = "ACTIVE";
+        } else if (data.state === "paused" && room.state === "ERRORED") {
+            newState = "ERRORED";
+        } else {
+            newState = "PAUSED";
+        }
+        await g.prisma.room.update({
+            where: {
+                // eslint-disable-next-line camelcase
+                roomId_host: {
+                    roomId,
+                    host: data.host,
+                },
+            },
+            data: {
+                name,
+                antifreezeMessage: data.message,
+                locked: data.locked,
+                state: newState,
+            },
+        });
     }
     redirect(`/rooms/${data.host.toLowerCase()}/${roomId}`);
 }
