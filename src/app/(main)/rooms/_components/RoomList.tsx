@@ -11,10 +11,12 @@ type RoomEntryProps = {
 export function RoomEntry({ room }: RoomEntryProps) {
     return <div className="list-group-item d-flex align-items-sm-center flex-column flex-sm-row">
         <div className="me-auto d-block">
-            <div>
-                <Link href={`/rooms/${room.host.toLowerCase()}/${room.roomId}`}>{room.name}</Link>
-                {room.state == "ERRORED" && <span className="badge text-bg-danger ms-2">errored</span>}
-                {room.locked && <span className="badge text-bg-secondary ms-2">locked</span>}
+            <div className="d-flex flex-wrap">
+                <Link href={`/rooms/${room.host.toLowerCase()}/${room.roomId}`} className="me-2">{room.name}</Link>
+                <span>
+                    {room.state == "ERRORED" && <span className="badge text-bg-danger me-2">errored</span>}
+                    {room.locked && <span className="badge text-bg-secondary">locked</span>}
+                </span>
             </div>
             <div className="text-muted">
                 {room.host}#{room.roomId}
