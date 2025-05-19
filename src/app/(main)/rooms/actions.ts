@@ -17,7 +17,7 @@ const modifyRoomSchema = z.object({
     host: hostSchema,
     message: z.string().min(3).max(128),
     state: z.enum(["active", "paused"]).default("active"),
-    locked: z.coerce.boolean().optional(),
+    locked: z.coerce.boolean(),
     roomId: z.union([z.coerce.number(), z.literal("custom")]),
     customRoomId: z.coerce.number().optional(),
 }).refine(({ roomId, customRoomId }) => roomId == "custom" ? customRoomId != undefined : true);
@@ -43,9 +43,6 @@ export async function modifyRoom(form: FormData): Promise<{ errors: string[] }> 
     }
     const ownedRooms = (await fetchUserOwnedRooms(data.host, user.networkId)).map(({ id }) => parseInt(id));
     if (!userCanEdit(user)) {
-        return { errors: ["Insufficent permissions"] };
-    }
-    if (data.locked !== undefined && !userCanModerate(user)) {
         return { errors: ["Insufficent permissions"] };
     }
     if ((data.roomId == "custom" || !ownedRooms.includes(data.roomId)) && !userCanModerate(user)) {
@@ -101,7 +98,7 @@ export async function modifyRoom(form: FormData): Promise<{ errors: string[] }> 
             data: {
                 name,
                 antifreezeMessage: data.message,
-                locked: data.locked,
+                locked: userCanModerate(user) ? data.locked : undefined,
                 state: newState,
             },
         });
