@@ -5,8 +5,6 @@ import { RoomEditForm } from "../../../_components/RoomEditForm";
 import { checkRoom, deleteRoom, modifyRoom } from "@/app/(main)/rooms/actions";
 import { useActionState } from "react";
 import { LoadingSubmitButton } from "@/app/_components/LoadingButton";
-import Link from "next/link";
-import { HOST_ADDRESSES } from "@/lib/util";
 
 export default function RoomDetailsForm({ room, canEdit, isModerator, isDeveloper }: { room: Room, canEdit: boolean, isModerator: boolean, isDeveloper: boolean }) {
     const [{ errors: formErrors }, editAction] = useActionState<{ errors: string[] }, FormData>(
@@ -26,7 +24,6 @@ export default function RoomDetailsForm({ room, canEdit, isModerator, isDevelope
         {canEdit && <>
             <hr />
             <div className="d-flex gap-2">
-                <Link className="me-auto" href={new URL(`/rooms/info/${room.roomId}`, HOST_ADDRESSES[room.host])} target="_blank">view in chat</Link>
                 {isDeveloper && (
                     <LoadingSubmitButton
                         variant="secondary"
