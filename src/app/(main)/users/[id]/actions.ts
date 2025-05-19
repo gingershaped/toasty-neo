@@ -2,6 +2,7 @@
 
 import { readUserSession } from "@/lib/auth/session";
 import { userCanModerate } from "@/lib/auth/utils";
+import { flash } from "@/lib/flash";
 import { g } from "@/lib/globals";
 import { roleSchema } from "@/lib/schema";
 import { parseFormData } from "@/lib/util";
@@ -37,5 +38,5 @@ export async function updateModOptions(form: FormData) {
             role: data.role,
         },
     });
-    redirect(`/users/${data.networkId}`);
+    await flash({ message: "Changes saved.", severity: "success" });
 }

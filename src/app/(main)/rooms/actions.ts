@@ -80,6 +80,7 @@ export async function modifyRoom(form: FormData): Promise<{ errors: string[] }> 
             },
         });
         await antifreezeSingleRoom(room.roomId, room.host, room.antifreezeMessage);
+        redirect(`/rooms/${data.host.toLowerCase()}/${roomId}`);
     } else {
         let newState: RoomState;
         if (data.state === "active") {
@@ -104,8 +105,9 @@ export async function modifyRoom(form: FormData): Promise<{ errors: string[] }> 
                 state: newState,
             },
         });
+        await flash({ message: "Changes saved!", severity: "success" });
+        return { errors: [] }; 
     }
-    redirect(`/rooms/${data.host.toLowerCase()}/${roomId}`);
 }
 
 export async function deleteRoom(form: FormData) {
@@ -121,13 +123,13 @@ export async function deleteRoom(form: FormData) {
     if (!userCanEdit(user)) {
         return false;
     }
-    await g.prisma.room.delete({
+    const deletedRoom = await g.prisma.room.delete({
         where: {
             // eslint-disable-next-line camelcase
             roomId_host: {...data},
         },
     });
-    flash({ message: "Room deleted", severity: "success" });
+    flash({ message: `${deletedRoom.name} has been deleted.`, severity: "danger" });
     redirect(`/rooms`);
 }
 
