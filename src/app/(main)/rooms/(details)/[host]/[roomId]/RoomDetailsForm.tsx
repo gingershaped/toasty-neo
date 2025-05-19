@@ -23,7 +23,7 @@ export default function RoomDetailsForm({ room, canEdit, isModerator, isDevelope
         />
         {canEdit && <>
             <hr />
-            <div className="d-flex gap-2">
+            <div className="d-flex gap-2 justify-content-end">
                 {isDeveloper && (
                     <LoadingSubmitButton
                         variant="secondary"

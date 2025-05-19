@@ -66,7 +66,7 @@ export function RoomAddForm({ isModerator }: { isModerator: boolean }) {
             <hr className="my-3" />
             <LoadingSubmitButton
                 variant="primary"
-                className="align-self-sm-end"
+                className="float-end"
                 disabled={loadingOwnedRooms}
                 formAction={action}
             >Add room</LoadingSubmitButton>
