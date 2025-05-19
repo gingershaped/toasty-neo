@@ -21,8 +21,9 @@ export default function RoomDetailsForm({ room, canEdit, isModerator, isDevelope
             readOnly={!canEdit}
             room={room}
         />
+        {formErrors.map((error, index) => <div key={index} className="text-danger mt-2">{error}</div>)}
         {canEdit && <>
-            <hr />
+            <hr className="my-2" />
             <div className="d-flex gap-2 justify-content-end">
                 {isDeveloper && (
                     <LoadingSubmitButton
@@ -40,7 +41,6 @@ export default function RoomDetailsForm({ room, canEdit, isModerator, isDevelope
                     variant="primary"
                     formAction={editAction}
                 >Save changes</LoadingSubmitButton>
-                {formErrors.map((error, index) => <div key={index} className="text-danger">{error}</div>)}
             </div>
         </>}
     </form>;

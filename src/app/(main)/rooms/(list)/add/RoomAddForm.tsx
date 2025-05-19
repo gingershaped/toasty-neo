@@ -63,7 +63,7 @@ export function RoomAddForm({ isModerator }: { isModerator: boolean }) {
         </div>
         <div className="col-sm-7">
             <RoomEditForm isModerator={isModerator} />
-            <hr className="my-3" />
+            <hr className="my-2" />
             <LoadingSubmitButton
                 variant="primary"
                 className="float-end"
