@@ -16,7 +16,7 @@ import { antifreeze, saveAntifreezeResult } from "@/lib/chat/antifreeze";
 const modifyRoomSchema = z.object({
     host: hostSchema,
     message: z.string().min(3).max(128),
-    state: z.enum(["active", "paused"]),
+    state: z.enum(["active", "paused"]).default("active"),
     locked: z.coerce.boolean().optional(),
     roomId: z.union([z.coerce.number(), z.literal("custom")]),
     customRoomId: z.coerce.number().optional(),
