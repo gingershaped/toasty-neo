@@ -6,7 +6,6 @@ import { flash } from "@/lib/flash";
 import { g } from "@/lib/globals";
 import { roleSchema } from "@/lib/schema";
 import { parseFormData } from "@/lib/util";
-import { redirect } from "next/navigation";
 import { z } from "zod";
 
 const modOptionsSchema = z.object({
