@@ -25,7 +25,7 @@ export function RoomAddForm({ isModerator }: { isModerator: boolean }) {
                 <option value={Host.SO}>Stack Overflow</option>
             </select>
             <input type="search" className="form-control mb-2" placeholder="Filter rooms" value={searchQuery} onInput={(e) => setSearchQuery(e.currentTarget.value)} />
-            <div className="border rounded flex-grow-1">
+            <div className="border rounded flex-grow-1" style={{ minHeight: "200px" }}>
                 <div className="rounded overflow-y-auto h-100 container-type-sm-size" style={{ clipPath: "content-box" }}>
                     {ownedRoomsError != null && <div className="text-danger text-center">Failed to fetch rooms</div>}
                     {loadingOwnedRooms && (
