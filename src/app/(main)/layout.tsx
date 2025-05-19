@@ -15,10 +15,12 @@ export default async function MainLayout({ children }: { children: ReactNode }) 
                 "rooms/add": "Add room",
             }}
         </Header>
-        <Alerts flashList={flashList} />
-        <main className="container-lg mt-5 mb-3 flex-grow-1">
-            {children}
-        </main>
+        <div className="position-relative">
+            <Alerts flashList={flashList} />
+            <main className="container-lg mt-5 mb-3 flex-grow-1">
+                {children}
+            </main>
+        </div>
         <footer className="bg-body-tertiary border-top ps-4 p-2 mt-auto text-muted d-flex flex-column flex-sm-row">
             <p className="mb-0 me-auto">
                 ◈ Built by <a href="https://codegolf.stackexchange.com/users/108218/">Ginger</a>

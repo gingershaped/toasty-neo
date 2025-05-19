@@ -2,27 +2,37 @@
 
 import { useSearchParams } from "next/navigation";
 import { Flash } from "../../lib/flash";
-import Link from "next/link";
 
 export function Alerts({ flashList }: { flashList: Flash[] }) {
     const params = useSearchParams();
 
-    return <div className="container-sm">
+    return <div className="toast-container position-absolute top-0 end-0 p-3">
         {flashList.length > 0 && flashList.map(({ message, severity }, index) => (
-            <div key={index} className={`alert alert-${severity} alert-dismissible fade show mt-3`} role="alert">
-                {message}
-                <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <div key={index} className={`toast align-items-center text-bg-${severity} border-0 show`} role="alert" aria-live="assertive" aria-atomic="true">
+                <div className="d-flex">
+                    <div className="toast-body">
+                        {message}
+                    </div>
+                    <button type="button" className="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
             </div>
         ))}
         {params.has("unverified") && (
-            <div className="alert alert-warning mt-3" role="alert">
-                <span>You have insufficient network-wide reputation to use Toasty; you need at least 200.&nbsp;</span>
-                <Link href={"/auth/login"}>Recheck reputation</Link>
+            <div className="toast align-items-center show bg-warning-subtle text-warning-emphasis border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                <div className="d-flex">
+                    <div className="toast-body">
+                        You have insufficient network-wide reputation to use Toasty; you need at least 200. <a href="/auth/login">Recheck reputation</a>
+                    </div>
+                </div>
             </div>
         )}
         {params.has("locked") && (
-            <div className="alert alert-danger mt-3" role="alert">
-                <span>Your account has been locked for abuse.&nbsp;</span>
+            <div className="toast align-items-center text-bg-danger border-0 show" role="alert" aria-live="assertive" aria-atomic="true">
+                <div className="d-flex">
+                    <div className="toast-body">
+                        Your account has been locked for abuse.
+                    </div>
+                </div>
             </div>
         )}
     </div>;
