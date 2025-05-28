@@ -23,7 +23,7 @@
     "pino-pretty": "^13.0.0",
     "swr": "^2.3.3",
     "tough-cookie": "^5.0.0",
-    "zod": "^3.25.3"
+    "zod": "^3.25.28"
   },
   "devDependencies": {
     "@stylistic/eslint-plugin": "^4.4.0",
