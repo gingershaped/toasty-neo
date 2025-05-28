@@ -26,8 +26,8 @@
     "zod": "^3.25.3"
   },
   "devDependencies": {
-    "@stylistic/eslint-plugin": "^4.2.0",
-    "@stylistic/eslint-plugin-jsx": "^4.2.0",
+    "@stylistic/eslint-plugin": "^4.4.0",
+    "@stylistic/eslint-plugin-jsx": "^4.4.0",
     "@types/bootstrap": "^5.2.10",
     "@types/node": "^22",
     "@types/node-schedule": "^2.1.7",
