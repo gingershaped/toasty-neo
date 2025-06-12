@@ -26,20 +26,20 @@
     "zod": "^3.25.56"
   },
   "devDependencies": {
-    "@stylistic/eslint-plugin": "^4.4.0",
-    "@stylistic/eslint-plugin-jsx": "^4.4.0",
+    "@stylistic/eslint-plugin": "^4.4.1",
+    "@stylistic/eslint-plugin-jsx": "^4.4.1",
     "@types/bootstrap": "^5.2.10",
     "@types/node": "^22",
     "@types/node-schedule": "^2.1.7",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/tough-cookie": "^4.0.5",
-    "@typescript-eslint/eslint-plugin": "^8.32.1",
-    "eslint": "^9.27.0",
-    "eslint-config-next": "15.3.2",
+    "@typescript-eslint/eslint-plugin": "^8.34.0",
+    "eslint": "^9.28.0",
+    "eslint-config-next": "15.3.3",
     "eslint-config-prettier": "^10.1.5",
-    "prisma": "^6.8.2",
-    "sass": "^1.89.0",
+    "prisma": "^6.9.0",
+    "sass": "^1.89.2",
     "typescript": "^5"
   }
 }
