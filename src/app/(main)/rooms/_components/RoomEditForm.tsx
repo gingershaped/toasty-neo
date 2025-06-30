@@ -16,10 +16,10 @@ export function RoomEditForm({ isModerator, readOnly, room }: RoomEditFormProps)
                 </div>
                 {room && (
                     <div className="btn-group" role="group" aria-label="Room state">
-                        <input type="radio" className="btn-check" name="state" value="active" id="room-state-active" defaultChecked={room.state === "ACTIVE"} />
+                        <input type="radio" className="btn-check" name="state" value="active" id="room-state-active" defaultChecked={room.state === "ACTIVE"} disabled={readOnly} />
                         <label className="btn btn-outline-primary" htmlFor="room-state-active">Active</label>
 
-                        <input type="radio" className="btn-check" name="state" value="paused" id="room-state-paused" defaultChecked={room.state !== "ACTIVE"} />
+                        <input type="radio" className="btn-check" name="state" value="paused" id="room-state-paused" defaultChecked={room.state !== "ACTIVE"} disabled={readOnly} />
                         <label className={`btn btn-outline-${room.state === "ERRORED" ? "danger" : "secondary"} border-start-0`} htmlFor="room-state-paused">Paused</label>
                     </div>
                 )}
