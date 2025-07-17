@@ -10,8 +10,8 @@ export function RoomEditForm({ isModerator, readOnly, room }: RoomEditFormProps)
     return <>
         <div className="mb-3">
             <label htmlFor="room-message" className="form-label">Antifreeze message to send</label>
-            <div className="btn-toolbar">
-                <div className="input-group me-2 flex-grow-1">
+            <div className="btn-toolbar gap-2">
+                <div className="input-group flex-grow-1">
                     <input type="text" className="form-control" id="room-message" name="message" maxLength={128} defaultValue={room?.antifreezeMessage ?? "---"} disabled={readOnly} />
                 </div>
                 {room && (
