@@ -18,7 +18,7 @@ export async function decrypt<T extends ZodTypeAny>(session: string, schema: T):
     try {
         const { payload } = await jwtVerify(session, sessionKey, { algorithms: ["HS256"] });
         return await schema.parseAsync(payload);
-    } catch (error) {
+    } catch(error) {
         console.error("Failed to decrypt session", error);
         return null;
     }

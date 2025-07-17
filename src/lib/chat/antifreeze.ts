@@ -80,7 +80,7 @@ export async function antifreeze(job: AntifreezeJob): Promise<AntifreezeJobResul
             logger.info("No antifreeze needed, skipping");
             return { result: AntifreezeResult.OK, checkedAt: now.valueOf(), lastMessage: lastMessage.valueOf() };
         }
-    } catch (error) {
+    } catch(error) {
         logger.error({ error }, "An error occured:");
         return { result: AntifreezeResult.ERROR, checkedAt: now.valueOf(), error: "An internal error occured" };
     }

@@ -179,7 +179,7 @@ export class Credentials {
         let credentials: Credentials | null = null;
         try {
             credentials = await Credentials.load(path);
-        } catch (e) {
+        } catch(e) {
             this.logger.warn(`Failed to load credentials from ${path}: ${e}`);
         }
         if (credentials != null) {

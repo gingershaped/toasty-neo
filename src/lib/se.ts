@@ -68,7 +68,7 @@ export async function seRequest<T extends z.ZodTypeAny>(endpoint: string, itemSc
         for (const item of payload.items) {
             try {
                 items.push(itemSchema.parse(item));
-            } catch (e) {
+            } catch(e) {
                 throw new Error("Malformed item!", { cause: { item, error: e } });
             }
         }
