@@ -9,21 +9,21 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@prisma/client": "^6.12.0",
+    "@prisma/client": "^6.13.0",
     "bootstrap": "^5.3.7",
     "bootstrap-icons": "^1.13.1",
     "dayjs": "^1.11.13",
     "fetch-cookie": "^3.1.0",
     "got": "^14.4.7",
     "jose": "^6.0.12",
-    "next": "^15.4.2",
+    "next": "^15.4.6",
     "node-html-parser": "^7.0.1",
     "node-schedule": "^2.1.1",
-    "pino": "^9.7.0",
-    "pino-pretty": "^13.0.0",
-    "swr": "^2.3.4",
+    "pino": "^9.8.0",
+    "pino-pretty": "^13.1.1",
+    "swr": "^2.3.6",
     "tough-cookie": "^5.0.0",
-    "zod": "^4.0.5"
+    "zod": "^4.0.17"
   },
   "devDependencies": {
     "@stylistic/eslint-plugin": "^5.2.1",
