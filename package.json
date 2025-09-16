@@ -34,12 +34,12 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/tough-cookie": "^4.0.5",
-    "@typescript-eslint/eslint-plugin": "^8.41.0",
-    "eslint": "^9.34.0",
+    "@typescript-eslint/eslint-plugin": "^8.43.0",
+    "eslint": "^9.35.0",
     "eslint-config-next": "15.5.2",
     "eslint-config-prettier": "^10.1.8",
     "prisma": "^6.15.0",
-    "sass": "^1.91.0",
+    "sass": "^1.92.1",
     "typescript": "^5"
   }
 }
