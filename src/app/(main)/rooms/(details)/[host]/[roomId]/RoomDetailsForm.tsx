@@ -13,7 +13,6 @@ type RoomDetailsFormProps = {
 };
 
 export default function RoomDetailsForm({ room, editLevel }: RoomDetailsFormProps) {
-
     const [{ errors: formErrors }, editAction] = useActionState<{ errors: string[] }, FormData>(
         (_, form) => modifyRoom(form), { errors: [] },
     );

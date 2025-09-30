@@ -14,7 +14,7 @@ import { antifreeze, saveAntifreezeResult } from "@/lib/chat/antifreeze";
 import { userEditLevel } from "./_utils/server";
 import { RoomEditLevel } from "./_utils/common";
 
-const modifyRoomSchema = z.object({
+const createRoomSchema = z.object({
     host: hostSchema,
     message: z.string().min(3).max(128),
     state: z.enum(["active", "paused"]).default("active"),
@@ -23,12 +23,20 @@ const modifyRoomSchema = z.object({
     customRoomId: z.coerce.number().optional(),
 }).refine(({ roomId, customRoomId }) => roomId == "custom" ? customRoomId !== undefined : true);
 
-const deleteOrCheckRoomSchema = z.object({
+const modifyRoomSchema = z.object({
+    host: hostSchema,
+    message: z.string().min(3).max(128),
+    state: z.enum(["active", "paused"]).default("active"),
+    locked: z.coerce.boolean(),
+    roomId: z.coerce.number(),
+});
+
+const roomKeySchema = z.object({
     host: hostSchema,
     roomId: z.coerce.number(),
 });
 
-export async function fetchOwnedRooms(host: Host) {
+export async function fetchAvailableRooms(host: Host) {
     const user = await readUserSession() ?? redirect("/auth/login");
     const alreadyAddedRooms = new Set((await g.prisma.room.findMany({ where: { host, jobCreatorId: user.networkId } })).map(({ roomId }) => roomId));
     return (await fetchUserOwnedRooms(host, user.networkId)).filter(({ id }) => !alreadyAddedRooms.has(parseInt(id)));
@@ -43,10 +51,68 @@ export async function modifyRoom(form: FormData): Promise<{ errors: string[] }> 
         ) };
     }
     
+    const roomName = await fetchRoomName(data.host, data.roomId);
+    const room = await g.prisma.room.findUnique({
+        where: {
+            // eslint-disable-next-line camelcase
+            roomId_host: data,
+        },
+    });
+    
+    if (room === null || roomName === null) {
+        return { errors: ["This room no longer exists."] };
+    }
+    
+    const editLevel = await userEditLevel(user, room);
+
+    if (editLevel === RoomEditLevel.READONLY) {
+        return { errors: ["You may not edit this room."] };
+    }
+    
+    let newState: RoomState;
+    if (data.state === "active") {
+        newState = "ACTIVE";
+    } else if (data.state === "paused" && room.state === "ERRORED") {
+        newState = "ERRORED";
+    } else {
+        newState = "PAUSED";
+    }
+
+    await g.prisma.room.update({
+        where: {
+            // eslint-disable-next-line camelcase
+            roomId_host: data,
+        },
+        data: {
+            name: roomName,
+            antifreezeMessage: data.message,
+            locked: editLevel >= RoomEditLevel.MODERATOR ? data.locked : undefined,
+            state: newState,
+        },
+    });
+    await flash({ message: "Changes saved!", severity: "success" });
+    return { errors: [] };
+}
+
+export async function createRoom(form: FormData) {
+    const user = await readUserSession() ?? redirect("/auth/login");
+    const { data, error, success } = parseFormData(form, createRoomSchema);
+    if (!success) {
+        return { errors: Object.entries(error.flatten().fieldErrors).flatMap(
+            ([field, errors]) => errors.map((error) => `${field}: ${error}`),
+        ) };
+    }
+    
     const roomId = data.roomId == "custom" ? data.customRoomId! : data.roomId;
     const roomName = await fetchRoomName(data.host, roomId);
     if (roomName == null) {
-        return { errors: ["Room does not exist"] };
+        return { errors: ["This rom does not exist."] };
+    }
+
+    const editLevel = await userEditLevel(user, null);
+
+    if (editLevel === RoomEditLevel.READONLY) {
+        return { errors: ["You may not create a job for this room."] };
     }
 
     let room = await g.prisma.room.findUnique({
@@ -58,17 +124,7 @@ export async function modifyRoom(form: FormData): Promise<{ errors: string[] }> 
             },
         },
     });
-    
-    const editLevel = await userEditLevel(user, room);
 
-    if (editLevel === RoomEditLevel.READONLY) {
-        return { errors: ["You may not edit this room."] };
-    }
-
-    if (data.roomId === "custom" && editLevel < RoomEditLevel.MODERATOR) {
-        return { errors: ["You are not an owner of this room"] };
-    }
-    
     if (room === null) {
         room = await g.prisma.room.create({
             data: {
@@ -76,6 +132,7 @@ export async function modifyRoom(form: FormData): Promise<{ errors: string[] }> 
                 name: roomName,
                 host: data.host,
                 antifreezeMessage: data.message,
+                locked: editLevel >= RoomEditLevel.MODERATOR ? data.locked : undefined,
                 jobCreator: {
                     connect: {
                         networkId: user.networkId,
@@ -84,40 +141,16 @@ export async function modifyRoom(form: FormData): Promise<{ errors: string[] }> 
             },
         });
         await antifreezeSingleRoom(room.roomId, room.host, room.antifreezeMessage);
-        redirect(`/rooms/${data.host.toLowerCase()}/${roomId}`);
     } else {
-        let newState: RoomState;
-        if (data.state === "active") {
-            newState = "ACTIVE";
-        } else if (data.state === "paused" && room.state === "ERRORED") {
-            newState = "ERRORED";
-        } else {
-            newState = "PAUSED";
-        }
-
-        await g.prisma.room.update({
-            where: {
-                // eslint-disable-next-line camelcase
-                roomId_host: {
-                    roomId,
-                    host: data.host,
-                },
-            },
-            data: {
-                name: roomName,
-                antifreezeMessage: data.message,
-                locked: editLevel >= RoomEditLevel.MODERATOR ? data.locked : undefined,
-                state: newState,
-            },
-        });
-        await flash({ message: "Changes saved!", severity: "success" });
-        return { errors: [] }; 
+        await flash({ message: "This room already has an antifreeze job.", severity: "info" });
     }
+    
+    redirect(`/rooms/${data.host.toLowerCase()}/${roomId}`);
 }
 
 export async function deleteRoom(form: FormData) {
     const user = await readUserSession() ?? redirect("/auth/login");
-    const { data, success } = parseFormData(form, deleteOrCheckRoomSchema);
+    const { data, success } = parseFormData(form, roomKeySchema);
     if (!success) {
         return false;
     }
@@ -153,7 +186,7 @@ export async function checkRoom(form: FormData) {
     if (user.role != Role.DEVELOPER) {
         return false;
     }
-    const { data, success } = parseFormData(form, deleteOrCheckRoomSchema);
+    const { data, success } = parseFormData(form, roomKeySchema);
     if (!success) {
         return false;
     }

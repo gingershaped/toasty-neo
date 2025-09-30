@@ -2,7 +2,7 @@
 
 import { useActionState, useMemo, useState } from "react";
 import { RoomEditForm } from "../../_components/RoomEditForm";
-import { modifyRoom, fetchOwnedRooms } from "../../actions";
+import { fetchAvailableRooms, createRoom } from "../../actions";
 import { Host } from "@/lib/generated/prisma/client";
 import useSWR from "swr";
 import { LoadingSubmitButton } from "@/app/_components/LoadingButton";
@@ -11,11 +11,11 @@ import { RoomEditLevel } from "../../_utils/common";
 export function RoomAddForm({ editLevel }: { editLevel: RoomEditLevel }) {
     const [host, setHost] = useState<Host>(Host.SE);
     const [searchQuery, setSearchQuery] = useState("");
-    const { data: ownedRooms, error: ownedRoomsError, isLoading: loadingOwnedRooms } = useSWR(host, fetchOwnedRooms);
+    const { data: ownedRooms, error: ownedRoomsError, isLoading: loadingOwnedRooms } = useSWR(host, fetchAvailableRooms);
 
     const filteredRooms = useMemo(() => ownedRooms?.filter(({ name }) => searchQuery.length == 0 || name.toLowerCase().includes(searchQuery)), [ownedRooms, searchQuery]);
     const [{ errors: formErrors }, action] = useActionState<{ errors: string[] }, FormData>(
-        (_, form) => modifyRoom(form), { errors: [] },
+        (_, form) => createRoom(form), { errors: [] },
     );
     
     return <form className="row" >
