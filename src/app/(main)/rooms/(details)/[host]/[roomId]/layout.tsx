@@ -23,7 +23,7 @@ export default async function RoomDetails({ params, children }: { params: RoomPa
                         href={new URL(`/rooms/info/${room.roomId}`, HOST_ADDRESSES[room.host]).toString()}
                         target="_blank"
                         className="mb-sm-1 me-sm-3"
-                        style={{ width: "fit-content" }}
+                        style={{ width: "fit-content", whiteSpace: "nowrap" }}
                     >View in chat</Link>
                 </div>
             </TabbedHeader>
