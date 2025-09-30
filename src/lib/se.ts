@@ -62,7 +62,7 @@ export async function seRequest<T extends z.ZodTypeAny>(endpoint: string, itemSc
         if (payload == null || payload.error_name != undefined) {
             throw new Error("Response error occured!", { cause: response });
         }
-        if (payload.backoff != undefined) {
+        if (payload.backoff !== undefined) {
             await new Promise((r) => setTimeout(r, payload.backoff! * 1000));
         }
         for (const item of payload.items) {

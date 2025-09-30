@@ -22,10 +22,10 @@ export function RunEntry({ run }: { run: AntifreezeRun }) {
             <span className={`badge text-bg-${badgeColor} align-self-baseline`}>{badgeLabel}</span>
         </div>
         <div className="form-text">
-            {run.result == "ERROR" ? (
-                <><span className="text-danger">An error occured:&nbsp;</span>{run.error!}</>
+            {run.result === "ERROR" ? (
+                <><span className="text-danger">An error occured:&nbsp;</span>{run.error ?? "lp0 on fire"}</>
             ) : (
-                <span>Most recent message sent at {dayjs(run.lastMessage!).format(TIME_FORMAT)}</span>
+                <span>Most recent message sent {run.lastMessage !== null ? dayjs(run.lastMessage).format(TIME_FORMAT) : "at the dawn of time"}</span>
             )}
         </div>
     </li>;
