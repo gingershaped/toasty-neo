@@ -14,8 +14,10 @@ export default async function UserDetailsLayout({ params, children }: { params: 
                     "rooms": "Rooms",
                 }}
             >
-                {user.username}
-                <RoleBadge role={user.role} className="fs-5 ms-3 mb-1 align-text-bottom" />
+                <h1 className="flex-grow-1 border-bottom-sm m-0 pb-2 pb-sm-1">
+                    {user.username}
+                    <RoleBadge role={user.role} className="fs-5 ms-3 mb-1 align-text-bottom" />
+                </h1>
             </TabbedHeader>
             {children}
         </div>

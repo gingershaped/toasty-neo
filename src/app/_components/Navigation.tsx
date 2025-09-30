@@ -32,9 +32,7 @@ export type TabbedHeaderProps = {
 
 export function TabbedHeader({ base, nav, children }: TabbedHeaderProps) {
     return <div className="d-flex align-items-sm-end flex-column flex-sm-row mb-3">
-        <h1 className="flex-grow-1 border-bottom-sm m-0 pb-2 pb-sm-1">
-            {children}
-        </h1>
+        {children}
         <Navigation base={base} style="tabs">
             {nav}
         </Navigation>

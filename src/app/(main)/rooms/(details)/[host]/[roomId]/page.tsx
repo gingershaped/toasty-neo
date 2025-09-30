@@ -2,11 +2,10 @@
 
 import { UserLink } from "@/app/_components/UserLink";
 import { getRoom, RoomParams } from "./room";
-import { HOST_ADDRESSES, TIME_FORMAT } from "@/lib/util";
+import { TIME_FORMAT } from "@/lib/util";
 import dayjs from "dayjs";
 import { readUserSession } from "@/lib/auth/session";
 import RoomDetailsForm from "./RoomDetailsForm";
-import Link from "next/link";
 import { userEditLevel } from "../../../_utils/server";
 
 export default async function RoomDetails({ params }: { params: RoomParams }) {
@@ -19,13 +18,10 @@ export default async function RoomDetails({ params }: { params: RoomParams }) {
 
     return <div>
         <div className="container-flow mb-3 text-center text-break">
-            <div className="row row-cols-2 row-cols-md-4 gy-1 gx-0">
+            <div className="row row-cols-1 row-cols-md-3 gy-1 gx-0">
                 <div className="col">
                     <span className="text-secondary-emphasis">added by&nbsp;</span><wbr />
                     <span className="text-nowrap"><UserLink user={room.jobCreator} /></span>
-                </div>
-                <div className="col">
-                    <Link href={new URL(`/rooms/info/${room.roomId}`, HOST_ADDRESSES[room.host]).toString()} target="_blank">view in chat</Link>
                 </div>
                 <div className="col">
                     <span className="text-secondary-emphasis">last antifreeze&nbsp;</span><wbr />

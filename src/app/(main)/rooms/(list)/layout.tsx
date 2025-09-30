@@ -14,7 +14,9 @@ export default async function RoomsLayout({ children }: { children: ReactNode })
                     "add": "Add room",
                 }}
             >
-                Rooms
+                <h1 className="flex-grow-1 border-bottom-sm m-0 pb-2 pb-sm-1">
+                    Rooms
+                </h1>
             </TabbedHeader>
             {children}
         </div>
