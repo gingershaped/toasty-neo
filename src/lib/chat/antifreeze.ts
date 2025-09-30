@@ -57,6 +57,10 @@ export async function antifreeze(job: AntifreezeJob): Promise<AntifreezeJobResul
         }
 
         const roomName = await fetchRoomName(credentials.host, roomId);
+        if (roomName === null) {
+            logger.info("Room no longer exists");
+            return { result: AntifreezeResult.ERROR, checkedAt: now.valueOf(), error: "This room no longer exists" };
+        }
         logger.info(`Room name: ${roomName}`);
         const lastMessage = await lastMessageInRoom(client, fkey, roomId);
         logger.info(`Last message in room: ${lastMessage?.toISOString() ?? "<never>"}`);
