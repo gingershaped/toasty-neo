@@ -14,7 +14,7 @@ export default async function RoomDetails({ params }: { params: RoomParams }) {
     const editLevel = await userEditLevel(user, room);
 
     const lastAntifreeze = room.runs.findLast(({ result }) => result == "ANTIFREEZED")?.checkedAt;
-    const lastChecked = room.runs.at(-1)?.checkedAt;
+    const lastRun = room.runs.at(-1);
 
     return <div>
         <div className="container-flow mb-3 text-center text-break">
@@ -29,14 +29,14 @@ export default async function RoomDetails({ params }: { params: RoomParams }) {
                 </div>
                 <div className="col">
                     <span className="text-secondary-emphasis">last checked&nbsp;</span><wbr />
-                    <span className="text-nowrap">{lastChecked != null ? dayjs(lastChecked).format(TIME_FORMAT) : "never"}</span>
+                    <span className="text-nowrap">{lastRun !== undefined ? dayjs(lastRun.checkedAt).format(TIME_FORMAT) : "never"}</span>
                 </div>
             </div>
         </div>
-        {(room.state == "ERRORED" && lastChecked != null) && (
+        {(room.state === "ERRORED" && lastRun !== undefined) && (
             <>
                 <div className="alert alert-danger">
-                    <b>Antifreezing is paused</b> because an error occured during the last antifreeze run on {dayjs(lastChecked).format(TIME_FORMAT)}.
+                    <b>Antifreezing is paused</b>. {lastRun.error}.
                 </div>
             </>
         )}
