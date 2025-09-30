@@ -6,8 +6,9 @@ import { modifyRoom, fetchOwnedRooms } from "../../actions";
 import { Host } from "@/lib/generated/prisma/client";
 import useSWR from "swr";
 import { LoadingSubmitButton } from "@/app/_components/LoadingButton";
+import { RoomEditLevel } from "../../_utils/common";
 
-export function RoomAddForm({ isModerator }: { isModerator: boolean }) {
+export function RoomAddForm({ editLevel }: { editLevel: RoomEditLevel }) {
     const [host, setHost] = useState<Host>(Host.SE);
     const [searchQuery, setSearchQuery] = useState("");
     const { data: ownedRooms, error: ownedRoomsError, isLoading: loadingOwnedRooms } = useSWR(host, fetchOwnedRooms);
@@ -36,9 +37,9 @@ export function RoomAddForm({ isModerator }: { isModerator: boolean }) {
                         </div>
                     )}
                     {filteredRooms != undefined && <>
-                        {(filteredRooms.length == 0 && !isModerator) && <div className="w-100 text-center text-secondary-emphasis">no rooms</div>}
+                        {(filteredRooms.length == 0 && editLevel < RoomEditLevel.MODERATOR) && <div className="w-100 text-center text-secondary-emphasis">no rooms</div>}
                         <ul className="list-group list-group-flush rounded">
-                            {isModerator && <li className="list-group-item hstack">
+                            {editLevel >= RoomEditLevel.MODERATOR && <li className="list-group-item hstack">
                                 <input className="form-check-input my-0 me-2 align-self-center" type="radio" name="roomId" value="custom" required />
                                 <input className="form-control" type="number" name="customRoomId" placeholder="Enter a room ID" />
                             </li>}
@@ -62,7 +63,7 @@ export function RoomAddForm({ isModerator }: { isModerator: boolean }) {
             <div className="form-text">only rooms you are an owner of are listed</div>
         </div>
         <div className="col-sm-7">
-            <RoomEditForm isModerator={isModerator} />
+            <RoomEditForm editLevel={editLevel} />
             <hr className="my-2" />
             <LoadingSubmitButton
                 variant="primary"
