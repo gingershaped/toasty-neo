@@ -36,7 +36,7 @@ export default async function RoomDetails({ params }: { params: RoomParams }) {
         {(room.state === "ERRORED" && lastRun !== undefined) && (
             <>
                 <div className="alert alert-danger">
-                    <b>Antifreezing is paused</b>. {lastRun.error}.
+                    <b>Antifreezing is paused:</b> {lastRun.error}.
                 </div>
             </>
         )}
