@@ -5,8 +5,15 @@ import { RoomEditForm } from "../../../_components/RoomEditForm";
 import { checkRoom, deleteRoom, modifyRoom } from "@/app/(main)/rooms/actions";
 import { useActionState } from "react";
 import { LoadingSubmitButton } from "@/app/_components/LoadingButton";
+import { RoomEditLevel } from "../../../_utils/common";
 
-export default function RoomDetailsForm({ room, canEdit, isModerator, isDeveloper }: { room: Room, canEdit: boolean, isModerator: boolean, isDeveloper: boolean }) {
+type RoomDetailsFormProps = {
+    room: Room,
+    editLevel: RoomEditLevel,
+};
+
+export default function RoomDetailsForm({ room, editLevel }: RoomDetailsFormProps) {
+
     const [{ errors: formErrors }, editAction] = useActionState<{ errors: string[] }, FormData>(
         (_, form) => modifyRoom(form), { errors: [] },
     );
@@ -17,15 +24,14 @@ export default function RoomDetailsForm({ room, canEdit, isModerator, isDevelope
         <input type="hidden" name="host" value={room.host} />
         <input type="hidden" name="roomId" value={room.roomId} />
         <RoomEditForm
-            isModerator={isModerator}
-            readOnly={!canEdit}
             room={room}
+            editLevel={editLevel}
         />
         {formErrors.map((error, index) => <div key={index} className="text-danger mt-2">{error}</div>)}
-        {canEdit && <>
+        {editLevel >= RoomEditLevel.USER && <>
             <hr className="my-2" />
             <div className="d-flex gap-2 justify-content-end">
-                {isDeveloper && (
+                {editLevel >= RoomEditLevel.DEVELOPER && (
                     <LoadingSubmitButton
                         variant="secondary"
                         formAction={checkAction}

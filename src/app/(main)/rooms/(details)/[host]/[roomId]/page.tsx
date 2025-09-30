@@ -6,14 +6,14 @@ import { HOST_ADDRESSES, TIME_FORMAT } from "@/lib/util";
 import dayjs from "dayjs";
 import { readUserSession } from "@/lib/auth/session";
 import RoomDetailsForm from "./RoomDetailsForm";
-import { fetchUserOwnedRooms } from "@/lib/chat/fetch";
-import { userCanEdit, userCanModerate } from "@/lib/auth/utils";
 import Link from "next/link";
+import { userEditLevel } from "../../../_utils/server";
 
 export default async function RoomDetails({ params }: { params: RoomParams }) {
     const user = await readUserSession();
     const room = await getRoom(params, { jobCreator: true, runs: true });
-    const editable = user != null && userCanEdit(user) && ((await fetchUserOwnedRooms(room.host, user.networkId)).some(({ id }) => parseInt(id) == room.roomId) || userCanModerate(user));
+    const editLevel = await userEditLevel(user, room);
+
     const lastAntifreeze = room.runs.findLast(({ result }) => result == "ANTIFREEZED")?.checkedAt;
     const lastChecked = room.runs.at(-1)?.checkedAt;
 
@@ -44,6 +44,6 @@ export default async function RoomDetails({ params }: { params: RoomParams }) {
                 </div>
             </>
         )}
-        <RoomDetailsForm room={room} canEdit={editable} isModerator={user != null && userCanModerate(user)} isDeveloper={user != null && user.role == "DEVELOPER"} />
+        <RoomDetailsForm room={room} editLevel={editLevel} />
     </div>;
 }
