@@ -55,7 +55,10 @@ export async function modifyRoom(form: FormData): Promise<{ errors: string[] }> 
     const room = await g.prisma.room.findUnique({
         where: {
             // eslint-disable-next-line camelcase
-            roomId_host: data,
+            roomId_host: {
+                roomId: data.roomId,
+                host: data.host,
+            },
         },
     });
     
