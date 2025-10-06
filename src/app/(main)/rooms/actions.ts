@@ -81,7 +81,10 @@ export async function modifyRoom(form: FormData): Promise<{ errors: string[] }> 
     await g.prisma.room.update({
         where: {
             // eslint-disable-next-line camelcase
-            roomId_host: data,
+            roomId_host: {
+                roomId: data.roomId,
+                host: data.host,
+            },
         },
         data: {
             name: roomName,
@@ -129,8 +132,8 @@ export async function createRoom(form: FormData) {
         room = await g.prisma.room.create({
             data: {
                 roomId,
-                name: roomName,
                 host: data.host,
+                name: roomName,
                 antifreezeMessage: data.message,
                 locked: editLevel >= RoomEditLevel.MODERATOR ? data.locked : undefined,
                 jobCreator: {
