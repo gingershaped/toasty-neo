@@ -36,7 +36,7 @@
     "@types/tough-cookie": "^4.0.5",
     "@typescript-eslint/eslint-plugin": "^8.48.0",
     "eslint": "^9.39.1",
-    "eslint-config-next": "16.0.4",
+    "eslint-config-next": "16.0.7",
     "eslint-config-prettier": "^10.1.8",
     "prisma": "^7.0.0",
     "sass": "^1.94.2",
