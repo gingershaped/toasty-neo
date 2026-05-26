@@ -26,7 +26,7 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
-    "@stylistic/eslint-plugin": "^5.7.0",
+    "@stylistic/eslint-plugin": "^5.10.0",
     "@stylistic/eslint-plugin-jsx": "^4.4.1",
     "@types/bootstrap": "^5.2.10",
     "@types/node": "^25",
@@ -34,11 +34,11 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/tough-cookie": "^4.0.5",
-    "eslint": "^9.39.2",
+    "eslint": "^10.4.0",
     "eslint-config-next": "16.2.6",
     "eslint-config-prettier": "^10.1.8",
     "prisma": "^7.2.0",
-    "sass": "^1.97.2",
-    "typescript": "^5"
+    "sass": "^1.100.0",
+    "typescript": "^6"
   }
 }
